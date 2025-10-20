@@ -1,0 +1,76 @@
+{% extends "Base.html" %}
+
+{% block title %}Dashboard - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="Dashboard">
+    <div class="DashboardHeader">
+        <h1>Your Repositories</h1>
+        <a href="{{ url_for('RepoRoutes.CreateRepository') }}" class="Btn BtnPrimary">New Repository</a>
+    </div>
+
+    <div class="DashboardContent">
+        <div class="RepoColumn">
+            {% if Repositories %}
+                <div class="RepoGrid">
+                    {% for repo in Repositories %}
+                <div class="RepoCard">
+                    <div class="RepoCardHeader">
+                        <h3><a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}">{{ repo.Name }}</a></h3>
+                        {% if repo.IsPrivate %}
+                            <span class="Badge BadgePrivate">Private</span>
+                        {% else %}
+                            <span class="Badge BadgePublic">Public</span>
+                        {% endif %}
+                    </div>
+                    <p class="RepoDescription">{{ repo.Description or 'No Description' }}</p>
+                    <div class="RepoCardFooter">
+                        <span class="RepoUpdated">Updated {{ repo.UpdatedAt.strftime('%b %d, %Y') }}</span>
+                        <div class="RepoActions">
+                            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}" class="Btn BtnSmall">View</a>
+                            <a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=repo.Name) }}" class="Btn BtnSmall BtnSecondary">Settings</a>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="EmptyState">
+            <h2>Welcome To DevBhoomi!</h2>
+            <p>You Don't Have Any Repositories Yet. Create Your First Repository To Get Started.</p>
+            <a href="{{ url_for('RepoRoutes.CreateRepository') }}" class="Btn BtnPrimary">Create Your First Repository</a>
+        </div>
+            {% endif %}
+        </div>
+
+        <aside class="DashboardSidebar">
+            <div class="SidebarCard">
+                <h4>Repository Insights</h4>
+                <ul class="InsightsList">
+                    <li>Total repositories: <strong>{{ Repositories|length if Repositories else 0 }}</strong></li>
+                    <li>Public: <strong>{{ Repositories|selectattr('IsPrivate','equalto',False)|list|length if Repositories else 0 }}</strong></li>
+                    <li>Private: <strong>{{ Repositories|selectattr('IsPrivate','equalto',True)|list|length if Repositories else 0 }}</strong></li>
+                </ul>
+            </div>
+
+            <div class="SidebarCard">
+                <h4>Shortcuts</h4>
+                <ul class="QuickLinks">
+                    <li><a href="{{ url_for('RepoRoutes.CreateRepository') }}">Create Repository</a></li>
+                    <li><a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repositories[0].Name) if Repositories and Repositories|length > 0 else '#' }}">Upload File</a></li>
+                    <li><a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=Repositories[0].Name) if Repositories and Repositories|length > 0 else '#' }}">Repo Settings</a></li>
+                </ul>
+            </div>
+
+            <div class="SidebarCard">
+                <h4>Help & Resources</h4>
+                <ul class="Resources">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Community Forum</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

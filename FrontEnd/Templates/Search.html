@@ -1,0 +1,81 @@
+{% extends "Base.html" %}
+
+{% block title %}Search Results - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="SearchPage">
+    <div class="SearchHeader">
+        <h1>Search Results</h1>
+        <form class="SearchForm" method="GET" action="{{ url_for('SearchRoutes.Search') }}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search Users And Repositories..." required>
+            <select name="type">
+                <option value="all" {% if search_type == 'all' %}selected{% endif %}>All</option>
+                <option value="users" {% if search_type == 'users' %}selected{% endif %}>Users</option>
+                <option value="repos" {% if search_type == 'repos' %}selected{% endif %}>Repositories</option>
+            </select>
+            <button type="submit" class="Btn BtnPrimary">Search</button>
+        </form>
+    </div>
+
+    {% if query %}
+        <div class="SearchResults">
+            {% if search_type in ['all', 'users'] and users %}
+                <div class="SearchSection">
+                    <h2>Users</h2>
+                    <div class="UserGrid">
+                        {% for user in users %}
+                            <div class="UserCard">
+                                <div class="UserAvatar">
+                                    <i data-lucide="user"></i>
+                                </div>
+                                <div class="UserInfo">
+                                    <h3><a href="{{ url_for('AuthRoutes.UserProfile', username=user.Username) }}">{{ user.Username }}</a></h3>
+                                    <p>{{ user.Email }}</p>
+                                    <p class="UserJoined">Joined {{ user.CreatedAt.strftime('%B %Y') }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if search_type in ['all', 'repos'] and repos %}
+                <div class="SearchSection">
+                    <h2>Repositories</h2>
+                    <div class="RepoGrid">
+                        {% for repo in repos %}
+                            <div class="RepoCard">
+                                <div class="RepoCardHeader">
+                                    <h3><a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}">{{ repo.Owner.Username }}/{{ repo.Name }}</a></h3>
+                                    {% if repo.IsPrivate %}
+                                        <span class="Badge BadgePrivate">Private</span>
+                                    {% else %}
+                                        <span class="Badge BadgePublic">Public</span>
+                                    {% endif %}
+                                </div>
+                                <p class="RepoDescription">{{ repo.Description or 'No Description' }}</p>
+                                <div class="RepoCardFooter">
+                                    <span class="RepoUpdated">Updated {{ repo.UpdatedAt.strftime('%b %d, %Y') }}</span>
+                                    <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}" class="Btn BtnSmall">View</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not users and not repos %}
+                <div class="EmptyState">
+                    <h2>No Results Found</h2>
+                    <p>We Couldn't Find Any Users Or Repositories Matching "{{ query }}". Try A Different Search Term.</p>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="EmptyState">
+            <h2>Search DevBhoomi</h2>
+            <p>Find Users And Repositories By Name, Description, Or Username.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

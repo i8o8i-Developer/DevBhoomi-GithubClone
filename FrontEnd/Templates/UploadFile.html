@@ -1,0 +1,243 @@
+{% extends "Base.html" %}
+
+{% block title %}Upload Files - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="UploadFilePage">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}">{{ Repository.Name }}</a> /
+            <span>Upload Files</span>
+        </div>
+        <div class="PageHeaderActions">
+            <h1>Upload Files</h1>
+        </div>
+    </div>
+
+    <div class="UploadContainer">
+        <div class="UploadSidebar">
+            <div class="UploadTips">
+                <h3>
+                    <i data-lucide="info" class="icon" style="margin-right: 0.5rem;"></i>
+                    Upload Tips
+                </h3>
+                <ul class="TipsList">
+                    <li>Drag And Drop Files/Folders Or Click To Browse</li>
+                    <li>Mix Individual Files And Folders In A Single Upload</li>
+                    <li>Use "Choose Files" For Individual Files, "Add Folder" For Entire Folders</li>
+                    <li>Maximum File Size: 100MB Per File</li>
+                    <li>Files Will Be Uploaded To The Root Directory</li>
+                    <li>Folder Structure Will Be Preserved</li>
+                    <li>Use Descriptive Commit Messages</li>
+                </ul>
+            </div>
+
+            <div class="UploadProgress" id="uploadProgress" style="display: none;">
+                <h3>Upload Progress</h3>
+                <div class="ProgressBar">
+                    <div class="ProgressFill" id="progressFill"></div>
+                </div>
+                <div class="ProgressText" id="progressText">Preparing Upload...</div>
+            </div>
+        </div>
+
+        <div class="UploadMain">
+            <form method="post" enctype="multipart/form-data" class="UploadForm" id="uploadForm">
+                <div class="UploadZone" id="uploadZone">
+                    <div class="UploadZoneContent">
+                        <div class="UploadIcon">
+                            <i data-lucide="upload" style="width: 48px; height: 48px;"></i>
+                        </div>
+                        <div class="UploadText">
+                            <h3>Drag Files/Folders Here Or Click To Browse</h3>
+                            <p>Supported File Types: All Files Accepted</p>
+                        </div>
+                        <input type="file" id="files" name="files" multiple style="display: none;">
+                        <input type="file" id="folder" name="folder" webkitdirectory multiple style="display: none;">
+                        <div class="UploadButtons">
+                            <button type="button" class="Btn BtnSecondary" onclick="document.getElementById('files').click()">
+                                Choose Files
+                            </button>
+                            <span class="UploadSeparator">or</span>
+                            <button type="button" class="Btn BtnSecondary" onclick="document.getElementById('folder').click()">
+                                Add Folder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="SelectedFiles" id="selectedFiles" style="display: none;">
+                    <h3>Selected Files</h3>
+                    <div class="FileList" id="fileList"></div>
+                    <div class="FileStats">
+                        <span id="fileCount">0 Files</span>
+                        <span id="totalSize">0 B</span>
+                    </div>
+                </div>
+
+                <div class="FormGroup">
+                    <label for="commit_message">Commit Message</label>
+                    <input type="text" id="commit_message" name="commit_message" value="Upload Files" required>
+                    <small>Describe What These Files Contain Or What Changes They Make</small>
+                </div>
+
+                <div class="FormActions">
+                    <button type="submit" class="Btn BtnPrimary" id="uploadBtn">
+                        <i data-lucide="upload" class="icon" style="margin-right: 0.5rem;"></i>
+                        Upload Files
+                    </button>
+                    <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Cancel</a>
+                </div>
+
+                <!-- Hidden Inputs For Relative Paths Will Be Added Here By JavaScript -->
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedFiles = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('files');
+    const selectedFilesDiv = document.getElementById('selectedFiles');
+    const fileList = document.getElementById('fileList');
+    const fileCount = document.getElementById('fileCount');
+    const totalSize = document.getElementById('totalSize');
+    const uploadForm = document.getElementById('uploadForm');
+
+    // Before form submission, add relative paths as hidden inputs
+    uploadForm.addEventListener('submit', function(e) {
+        // Remove any existing relative path inputs
+        const existingInputs = uploadForm.querySelectorAll('input[name^="relative_path_"]');
+        existingInputs.forEach(input => input.remove());
+
+        // Add relative path inputs for each selected file
+        selectedFiles.forEach((file, index) => {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = `relative_path_${index}`;
+            hiddenInput.value = file.relativePath;
+            uploadForm.appendChild(hiddenInput);
+        });
+    });
+
+    // Drag And Drop Functionality
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+
+        const files = Array.from(e.dataTransfer.files);
+        handleFiles(files); // Don't Pass isFolder, Let HandleFiles Determine Per File
+    });
+
+    // File Input Change
+    fileInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        handleFiles(files);
+    });
+
+    // Folder Input Change
+    const folderInput = document.getElementById('folder');
+    folderInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        // Allow Mixing Files And Folders - Don't Clear Selections
+        // Process files and preserve folder structure
+        const newFiles = files.map(file => ({
+            file: file, // Store original File object
+            relativePath: file.webkitRelativePath || file.name, // Use webkitRelativePath if available, otherwise filename
+            name: file.name,
+            size: file.size
+        }));
+
+        selectedFiles = [...selectedFiles, ...newFiles];
+        updateFileList();
+        selectedFilesDiv.style.display = 'block';
+
+        // Update The File Input For Form Submission
+        updateFileInput();
+    }
+
+    function updateFileInput() {
+        // Always Use The Files Input For All Uploads
+        const dt = new DataTransfer();
+        selectedFiles.forEach(item => {
+            dt.items.add(item.file); // Use The Stored File Object
+        });
+        fileInput.files = dt.files;
+        // Clear Folder Input
+        folderInput.value = '';
+    }
+
+    function updateFileList() {
+        fileList.innerHTML = '';
+        let totalSizeBytes = 0;
+
+        selectedFiles.forEach((item, index) => {
+            totalSizeBytes += item.size;
+
+            const fileItem = document.createElement('div');
+            fileItem.className = 'FileItem';
+            fileItem.innerHTML = `
+                <div class="FileInfo">
+                    <div class="FileIcon">
+                        <i data-lucide="${item.relativePath.includes('/') ? 'folder' : 'file'}" class="icon"></i>
+                    </div>
+                    <div class="FileDetails">
+                        <div class="FileName">${item.relativePath}</div>
+                        <div class="FileSize">${formatFileSize(item.size)}</div>
+                    </div>
+                </div>
+                <button type="button" class="Btn BtnSmall BtnDanger" onclick="removeFile(${index})">
+                    <i data-lucide="x" class="icon"></i>
+                </button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+
+        fileCount.textContent = `${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''}`;
+        totalSize.textContent = formatFileSize(totalSizeBytes);
+    }
+
+    function formatFileSize(bytes) {
+        if (!bytes || bytes === 0) return '0 B';
+        if (isNaN(bytes)) return 'Unknown';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    window.removeFile = function(index) {
+        selectedFiles.splice(index, 1);
+        updateFileList();
+
+        if (selectedFiles.length === 0) {
+            selectedFilesDiv.style.display = 'none';
+            // Clear File Inputs
+            fileInput.value = '';
+            folderInput.value = '';
+        } else {
+            // Update the file input with remaining files
+            updateFileInput();
+        }
+    };
+});
+</script>
+{% endblock %}

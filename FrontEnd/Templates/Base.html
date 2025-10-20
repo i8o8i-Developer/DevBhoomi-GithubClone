@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DevBhoomi{% endblock %}</title>
+    <!-- Fonts: Poppins for UI, Fira Code For Code Blocks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/Style.css') }}" />
+    <!-- Markdown Renderer (Client-Side) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <!-- DOM Sanitizer To Safely Render Markdown HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="{{ url_for('static', filename='Js/Script.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <nav class="Navbar">
+            <div class="NavbarBrand">
+                <a href="{{ url_for('RepoRoutes.Dashboard') }}">DevBhoomi</a>
+            </div>
+            <ul class="NavbarNav">
+                {% if CurrentUser %}
+                    <li><a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('AuthRoutes.UserProfile', username=CurrentUser.Username) }}">My Profile</a></li>
+                    <li class="SearchFormContainer">
+                        <form class="NavbarSearch" method="GET" action="{{ url_for('SearchRoutes.Search') }}">
+                            <input type="text" name="q" placeholder="Search Users And Repos..." required>
+                            <button type="submit"><i data-lucide="search"></i></button>
+                        </form>
+                    </li>
+                    <li><a href="{{ url_for('AuthRoutes.Logout') }}">Logout ({{ CurrentUser.Username }})</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('AuthRoutes.Login') }}">Login</a></li>
+                    <li><a href="{{ url_for('AuthRoutes.Register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="MainContent container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="FlashMessages">
+                    {% for category, message in messages %}
+                        <div class="FlashMessage {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="Footer">
+        <div class="FooterContent">
+            <div class="FooterSection">
+                <h3>DevBhoomi</h3>
+                <p>A Self-Hosted Git Platform For Collaborative Development. Built By i8o8iWorkStation</p>
+                <div class="FooterSocial">
+                    <a href="#" class="FooterLink">GitHub</a>
+                    <a href="#" class="FooterLink">Documentation</a>
+                    <a href="#" class="FooterLink">Support</a>
+                </div>
+            </div>
+            <div class="FooterSection">
+                <h4>Features</h4>
+                <ul class="FooterLinks">
+                    <li><a href="#" class="FooterLink">Repository Management</a></li>
+                    <li><a href="#" class="FooterLink">Branch Control</a></li>
+                    <li><a href="#" class="FooterLink">Collaborative Coding</a></li>
+                    <li><a href="#" class="FooterLink">Version Control</a></li>
+                </ul>
+            </div>
+            <div class="FooterSection">
+                <h4>Resources</h4>
+                <ul class="FooterLinks">
+                    <li><a href="#" class="FooterLink">API Documentation</a></li>
+                    <li><a href="#" class="FooterLink">Git Tutorials</a></li>
+                    <li><a href="#" class="FooterLink">Best Practices</a></li>
+                    <li><a href="#" class="FooterLink">Community</a></li>
+                </ul>
+            </div>
+            <div class="FooterSection">
+                <h4>Legal</h4>
+                <ul class="FooterLinks">
+                    <li><a href="#" class="FooterLink">Privacy Policy</a></li>
+                    <li><a href="#" class="FooterLink">Terms of Service</a></li>
+                    <li><a href="#" class="FooterLink">License</a></li>
+                </ul>
+            </div>
+            <div class="FooterSection">
+                <h4>Community</h4>
+                <ul class="FooterLinks">
+                    <li><a href="#" class="FooterLink">Forum</a></li>
+                    <li><a href="#" class="FooterLink">Contribute</a></li>
+                    <li><a href="#" class="FooterLink">Chat</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="FooterBottom">
+            <p>&copy; 2025 DevBhoomi - Self-Hosted Git Platform. Built With Flask And ❤️</p>
+        </div>
+    </footer>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

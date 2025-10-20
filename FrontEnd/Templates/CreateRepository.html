@@ -1,0 +1,47 @@
+{% extends "Base.html" %}
+
+{% block title %}Create Repository - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="AuthContainer">
+    <div class="AuthCard">
+        <h1>Create New Repository</h1>
+        <form method="post" class="AuthForm">
+            <div class="FormGroup">
+                <label for="Name">Repository Name</label>
+                <input type="text" id="Name" name="Name" required autofocus>
+            </div>
+            <div class="FormGroup">
+                <label for="Description">Description (Optional)</label>
+                <textarea id="Description" name="Description" rows="3"></textarea>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="InitReadme" name="InitReadme"> Initialize This Repository With A README
+                </label>
+            </div>
+            <div class="FormGroup" id="ReadmeRow" style="display:none;">
+                <label for="ReadmeContent">README Content</label>
+                <textarea id="ReadmeContent" name="ReadmeContent" rows="6" placeholder="Write A Short Description Or Getting-Started Notes..."></textarea>
+            </div>
+            <div class="FormGroup">
+                <label for="License">License</label>
+                <select id="License" name="License">
+                    <option value="">-- No License --</option>
+                    <option value="mit">MIT License</option>
+                    <option value="apache-2.0">Apache License 2.0</option>
+                    <option value="gpl-3.0">GNU GPLv3</option>
+                    <option value="unlicense">Unlicense</option>
+                </select>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" name="IsPrivate" checked> Make This Repository Private
+                </label>
+            </div>
+            <button type="submit" class="Btn BtnPrimary BtnFull">Create Repository</button>
+        </form>
+        <p class="AuthLink"><a href="{{ url_for('RepoRoutes.Dashboard') }}">Back To Dashboard</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ profile_user.Username }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="ProfilePage">
+    <div class="ProfileHeader">
+        <div class="ProfileAvatar">
+            <i data-lucide="user"></i>
+        </div>
+        <div class="ProfileInfo">
+            <h1>{{ profile_user.Username }}</h1>
+            <p class="ProfileEmail">{{ profile_user.Email }}</p>
+            <p class="ProfileJoined">Joined {{ profile_user.CreatedAt.strftime('%B %Y') }}</p>
+            {% if CurrentUser and CurrentUser.Id == profile_user.Id %}
+                <div class="ProfileActions">
+                    <button id="editProfileBtn" class="Btn BtnSecondary">Edit Profile</button>
+                </div>
+            {% endif %}
+        </div>
+        <div class="ProfileStats">
+            <div class="Stat">
+                <span class="StatNumber">{{ repositories|length }}</span>
+                <span class="StatLabel">Repositories</span>
+            </div>
+            <div class="Stat">
+                <span class="StatNumber">{{ profile_user.Commits|length }}</span>
+                <span class="StatLabel">Commits</span>
+            </div>
+        </div>
+    </div>
+
+    {% if CurrentUser and CurrentUser.Id == profile_user.Id %}
+        <div id="editProfileForm" class="ProfileEditForm" style="display: none;">
+            <h2>Edit Profile</h2>
+            <form method="POST" action="{{ url_for('AuthRoutes.UpdateProfile', username=profile_user.Username) }}">
+                <div class="FormGroup">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ profile_user.Email }}" required>
+                </div>
+                <div class="FormGroup">
+                    <label for="current_password">Current Password (Required To Save Changes)</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                </div>
+                <div class="FormGroup">
+                    <label for="new_password">New Password (Leave Blank To Keep Current)</label>
+                    <input type="password" id="new_password" name="new_password">
+                </div>
+                <div class="FormActions">
+                    <button type="submit" class="Btn BtnPrimary">Save Changes</button>
+                    <button type="button" id="cancelEditBtn" class="Btn BtnSecondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="ProfileContent">
+        <div class="ProfileSection">
+            <h2>Repositories</h2>
+            {% if repositories %}
+                <div class="RepoGrid">
+                    {% for repo in repositories %}
+                        <div class="RepoCard">
+                            <div class="RepoCardHeader">
+                                <h3><a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}">{{ repo.Name }}</a></h3>
+                                {% if repo.IsPrivate %}
+                                    <span class="Badge BadgePrivate">Private</span>
+                                {% else %}
+                                    <span class="Badge BadgePublic">Public</span>
+                                {% endif %}
+                            </div>
+                            <p class="RepoDescription">{{ repo.Description or 'No Description' }}</p>
+                            <div class="RepoCardFooter">
+                                <span class="RepoUpdated">Updated {{ repo.UpdatedAt.strftime('%b %d, %Y') }}</span>
+                                <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=repo.Name) }}" class="Btn BtnSmall">View</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="EmptyState">
+                    <p>No Repositories To Show.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

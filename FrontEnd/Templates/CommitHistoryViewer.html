@@ -1,0 +1,96 @@
+{% extends "Base.html" %}
+
+{% block title %}Commits - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="CommitsPage">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}">{{ Repository.Name }}</a> /
+            Commits
+        </div>
+        <h1>Commit History</h1>
+    </div>
+
+    <div class="CommitsContent">
+        <div class="CommitsFilters">
+            <form method="get" class="InlineForm">
+                <select name="branch" onchange="this.form.submit()">
+                    <option value="">All Branches</option>
+                    {% for branch in Repository.Branches %}
+                        <option value="{{ branch.Name }}" {% if Branch and Branch == branch.Name %}selected{% endif %}>{{ branch.Name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        {% if Commits %}
+            <div class="CommitList">
+                {% for commit in Commits %}
+                    <div class="CommitItem" onclick="showCommitDetails('{{ commit.Hash }}')">
+                        <div class="CommitGraph">
+                            <div class="CommitDot"></div>
+                        </div>
+                        <div class="CommitInfo">
+                            <div class="CommitMessage">{{ commit.Message.split('\n')[0] }}</div>
+                            <div class="CommitMeta">
+                                <span class="CommitAuthor">{{ commit.Author.Username if commit.Author else 'Unknown' }}</span>
+                                <span class="CommitDate">{{ commit.CreatedAt.strftime('%b %d, %Y at %I:%M %p') }}</span>
+                                <span class="CommitHash">{{ commit.Hash[:7] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="EmptyState">
+                <h3>No Commits Found</h3>
+                <p>This Repository Doesn't Have Any Commits Yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Commit Details Modal -->
+<div id="CommitModal" class="Modal">
+    <div class="ModalContent LargeModal">
+        <span class="Close" onclick="hideCommitModal()">&times;</span>
+        <h2>Commit Details</h2>
+        <div id="CommitDetails">
+            <div class="Loading">Loading Commit Details...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCommitDetails(commitHash) {
+    document.getElementById('CommitModal').style.display = 'block';
+    const detailsDiv = document.getElementById('CommitDetails');
+
+    // Fetch Commit Details (This Would Need a Backend Endpoint)
+    detailsDiv.innerHTML = `
+        <div class="CommitDetail">
+            <div class="CommitHeader">
+                <h3>Commit ${commitHash.substring(0, 7)}</h3>
+                <div class="CommitMeta">
+                    <span>Author : Loading...</span>
+                    <span>Date : Loading...</span>
+                </div>
+            </div>
+            <div class="CommitMessage">
+                <pre>Loading Commit Message...</pre>
+            </div>
+            <div class="CommitDiff">
+                <h4>Changes</h4>
+                <pre>Loading Diff...</pre>
+            </div>
+        </div>
+    `;
+}
+
+function hideCommitModal() {
+    document.getElementById('CommitModal').style.display = 'none';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "Base.html" %}
+
+{% block title %}Browse Users - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="UsersPage">
+    <div class="PageHeader">
+        <h1>Browse Users</h1>
+        <p>Discover Developers And Contributors On DevBhoomi</p>
+    </div>
+
+    <div class="UsersGrid">
+        {% for user in users %}
+            <div class="UserCard">
+                <div class="UserAvatar">
+                    <i data-lucide="user"></i>
+                </div>
+                <div class="UserInfo">
+                    <h3><a href="{{ url_for('AuthRoutes.UserProfile', username=user.Username) }}">{{ user.Username }}</a></h3>
+                    <p>{{ user.Email }}</p>
+                    <p class="UserJoined">Joined {{ user.CreatedAt.strftime('%B %Y') }}</p>
+                </div>
+                <div class="UserStats">
+                    <div class="Stat">
+                        <span class="StatNumber">{{ user.Repositories|length }}</span>
+                        <span class="StatLabel">Repos</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if total_users > per_page %}
+        <div class="Pagination">
+            {% set total_pages = (total_users + per_page - 1) // per_page %}
+            {% if page > 1 %}
+                <a href="{{ url_for('SearchRoutes.BrowseUsers', page=page-1) }}" class="Btn BtnSecondary">Previous</a>
+            {% endif %}
+
+            <span class="PageInfo">Page {{ page }} of {{ total_pages }}</span>
+
+            {% if page < total_pages %}
+                <a href="{{ url_for('SearchRoutes.BrowseUsers', page=page+1) }}" class="Btn BtnSecondary">Next</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

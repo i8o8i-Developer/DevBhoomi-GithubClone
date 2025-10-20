@@ -1,0 +1,102 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ Repository.Name }} - Code - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="CodeView">
+    <div class="RepoHeader">
+        <div class="RepoTitle">
+            <h1>{{ Repository.Name }}</h1>
+            {% if Repository.IsPrivate %}
+                <span class="Badge BadgePrivate">Private</span>
+            {% else %}
+                <span class="Badge BadgePublic">Public</span>
+            {% endif %}
+        </div>
+        <div class="RepoActions">
+            <button onclick="cloneRepository()" class="Btn BtnPrimary">Clone</button>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Upload Files</a>
+                <a href="{{ url_for('RepoRoutes.CreateFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Create File</a>
+            {% endif %}
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Overview</a>
+            <a href="{{ url_for('RepoRoutes.ViewBranches', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Branches</a>
+            <a href="{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Commits</a>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Settings</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="CodeContent">
+        <!-- Breadcrumb Navigation -->
+        <div class="BreadcrumbNav">
+            <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}" class="BreadcrumbItem">{{ Repository.Name }}</a>
+            {% for crumb in Breadcrumbs %}
+                <span class="BreadcrumbSeparator">/</span>
+                <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, path=crumb.path) }}" class="BreadcrumbItem">{{ crumb.name }}</a>
+            {% endfor %}
+        </div>
+
+        <!-- File List -->
+        <div class="FileList">
+            {% if CurrentPath %}
+                <div class="FileItem FileItemBack">
+                    <div class="FileIcon">
+                        <i data-lucide="arrow-left" class="icon"></i>
+                    </div>
+                    <div class="FileName">
+                        <a href="{% if Breadcrumbs %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, path=Breadcrumbs[-1].path) }}{% else %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}{% endif %}">..</a>
+                    </div>
+                    <div class="FileMeta"></div>
+                </div>
+            {% endif %}
+
+            {% for file in Files %}
+                <div class="FileItem">
+                    <div class="FileIcon">
+                        {% if file.type == 'tree' %}
+                            <i data-lucide="folder" class="icon"></i>
+                        {% else %}
+                            <i data-lucide="file" class="icon"></i>
+                        {% endif %}
+                    </div>
+                    <div class="FileName">
+                        {% if file.type == 'tree' %}
+                            <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, path=file.path) }}">{{ file.name }}</a>
+                        {% else %}
+                            <a href="{{ url_for('RepoRoutes.ViewFile', RepoName=Repository.Name, FilePath=file.path) }}">{{ file.name }}</a>
+                        {% endif %}
+                    </div>
+                    <div class="FileMeta">
+                        {% if file.type == 'blob' and file.size %}
+                            <span class="FileSize">{{ (file.size / 1024)|round(1) }} KB</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if not Files %}
+                <div class="EmptyState">
+                    <h3>This Repository Is Empty</h3>
+                    <p>Get Started By Creating A New File Or Uploading Existing Files.</p>
+                    {% if Repository.OwnerId == CurrentUser.Id %}
+                        <a href="{{ url_for('RepoRoutes.CreateFile', RepoName=Repository.Name) }}" class="Btn BtnPrimary">Create New File</a>
+                        <a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Upload Files</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function cloneRepository() {
+    const cloneUrl = `git clone ${window.location.origin}/repo/{{ Repository.Name | tojson | safe }}.git`;
+    navigator.clipboard.writeText(cloneUrl).then(() => {
+        alert('Clone URL Copied To ClipBoard : ' + cloneUrl);
+    });
+}
+</script>
+
+{% endblock %}

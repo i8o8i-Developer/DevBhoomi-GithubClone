@@ -1,0 +1,2764 @@
+/* DevBhoomi - Modern UI/UX Stylesheet */
+html {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    font-family: 'Poppins';
+    background-color: #0d1117;
+    color: #f0f6fc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; 
+}
+
+body::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+*::-webkit-scrollbar { width: 0; height: 0; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1rem; }
+
+code, pre, .CodeBlock, .CodeEditor textarea, .CommitHash, .CommitMessage code {
+    font-family: 'Fira Code';
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #22c55e;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #16a34a;
+}
+
+/* ===== LAYOUT COMPONENTS ===== */
+.container {
+    width: 100%; 
+    margin: 0;
+    padding: 0 1rem;
+}
+
+/* ===== HEADER & NAVIGATION ===== */
+.header, header {
+    background-color: rgba(22,27,34,0.98); 
+    border-bottom: 1px solid rgba(48,54,61,0.9);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 1rem;
+}
+
+.NavbarBrand a {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #22c55e;
+    display: inline-block;
+    padding-right: 1rem;
+}
+
+.NavbarNav {
+    display: flex;
+    list-style: none;
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.NavbarNav li a {
+    color: #c9d1d9;
+    font-weight: 500;
+    padding: 0.35rem 0.25rem;
+    transition: color 0.15s ease;
+}
+
+.NavbarNav li a:hover {
+    color: #22c55e;
+}
+
+.NavbarActions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.LogoutLink {
+    color: #c9d1d9;
+    text-decoration: none;
+    padding-left: 0.5rem;
+    white-space: nowrap;
+}
+
+.LogoutLink:hover {
+    color: #f0f6fc;
+}
+
+/* ===== MAIN CONTENT ===== */
+.MainContent {
+    min-height: calc(100vh - 160px); 
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+    padding: 1.5rem 1rem;
+    width: 100%;
+    max-width: 1260px; 
+    margin: 0 auto; 
+    flex: 1;
+}
+
+/* ===== FLASH MESSAGES ===== */
+.FlashMessages {
+    margin-bottom: 2rem;
+}
+
+.FlashMessage {
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
+}
+
+.FlashMessage.success {
+    background-color: #0f5132;
+    color: #d1ecf1;
+    border: 1px solid #0f5132;
+}
+
+.FlashMessage.error {
+    background-color: #58151c;
+    color: #f5c2c7;
+    border: 1px solid #58151c;
+}
+
+.FlashMessage.warning {
+    background-color: #664d03;
+    color: #fff3cd;
+    border: 1px solid #664d03;
+}
+
+.FlashMessage.info {
+    background-color: #084c7d;
+    color: #cff4fc;
+    border: 1px solid #084c7d;
+}
+
+/* ===== BUTTONS ===== */
+.Btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.Btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.Btn:active {
+    transform: translateY(0);
+}
+
+.BtnPrimary {
+    background-color: #22c55e;
+    color: white;
+    border-color: #22c55e;
+}
+
+.BtnPrimary:hover {
+    background-color: #16a34a;
+    border-color: #16a34a;
+}
+
+.BtnPrimary,
+.BtnPrimary:link,
+.BtnPrimary:visited,
+.BtnPrimary:hover,
+.BtnPrimary:active {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.BtnSuccess {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.BtnSuccess:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.BtnSecondary {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border-color: #30363d;
+}
+
+.BtnSecondary:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+}
+
+.BtnSmall {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.BtnFull {
+    width: 100%;
+}
+
+/* ===== FORMS ===== */
+.AuthContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 2rem;
+}
+
+.AuthCard {
+    background-color: #161b22;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 520px; 
+    animation: fadeIn 0.3s ease-out;
+}
+
+.AuthCard h1 {
+    text-align: center;
+    color: #f0f6fc;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.AuthTitle {
+    font-size: 2.6rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.45);
+}
+
+.AuthForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.FormGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.FormGroup label {
+    font-weight: 500;
+    color: #f0f6fc;
+}
+
+.FormRow {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.FormRow label {
+    flex: 1 1 0;
+    margin-bottom: 0; 
+    display: block;
+    min-width: 0;
+}
+.FormRow input,
+.FormRow textarea,
+.FormRow select,
+.FormRow .FormControl {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.FormRow .FormControl {
+    width: 100%;
+}
+
+.FormGroup input,
+.FormGroup textarea,
+.FormGroup select {
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #0d1117;
+    color: #f0f6fc;
+}
+
+.FormControl {
+    height: 48px;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), inset 0 -1px 6px rgba(0,0,0,0.6);
+}
+
+.FormGroup input:focus,
+.FormGroup textarea:focus,
+.FormGroup select:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.AuthLink {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #8b949e;
+}
+
+.AuthLink.small { margin-top: 1.75rem; font-size: 0.95rem; }
+.AuthLink a { color: #22c55e; font-weight: 600; }
+
+.PillBtn {
+    border-radius: 12px;
+    padding: 0.95rem 1rem;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 20px rgba(34,197,94,0.16);
+}
+
+
+.AuthCard {
+    background-color: #0f1418;
+    border-radius: 14px;
+    padding: 2.25rem 3rem;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+.AuthContainer { min-height: 80vh; }
+
+.FormGroup label > input[type="checkbox"] {
+    margin-right: 0.75rem;
+    transform: translateY(1px);
+}
+
+.BtnPrimary.BtnFull {
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* ===== DASHBOARD ===== */
+.Dashboard {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.DashboardHeader {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 32rem;
+    margin-bottom: 1rem; 
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(255,255,255,0.04);
+    text-align: center;
+}
+
+
+.DashboardHeader {
+    position: relative; 
+}
+.DashboardHeader::before,
+.DashboardHeader::after {
+    content: '';
+    position: absolute;
+    bottom: 25px; 
+    width: 96px;
+    height: 22px;
+    background: #161b22;
+    border-radius: 14px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.35) inset;
+}
+.DashboardHeader::before {
+    left: 24px;
+}
+.DashboardHeader::after {
+    right: 24px;
+}
+
+.DashboardHeader h1 {
+    color: #f0f6fc;
+    margin: 0;
+    font-size: 2.25rem;
+}
+
+.RepoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    margin: 0;
+}
+
+/* Dashboard two-column layout */
+.DashboardContent {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.RepoColumn {
+    min-width: 0;
+}
+
+.DashboardSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.SidebarCard {
+    background: #121417;
+    border: 1px solid #232629;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.SidebarCard h4 {
+    margin: 0 0 0.5rem 0;
+    color: #e6fff3;
+}
+
+.ActivityList, .QuickLinks, .GettingStarted {
+    margin: 0;
+    padding-left: 1rem;
+    color: #9aa4ad;
+}
+
+.ActivityList li, .QuickLinks li, .GettingStarted li {
+    margin-bottom: 0.5rem;
+}
+
+
+.RepoCard {
+    background-color: #161b22;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #30363d;
+}
+
+.RepoGrid:has(.RepoCard:only-child) .RepoCard,
+.RepoGrid.single-column .RepoCard {
+    margin: 0 auto;
+    max-width: 640px;
+}
+
+.RepoCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.RepoCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.RepoCardHeader h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.RepoCardHeader h3 a {
+    color: #22c55e;
+}
+
+.RepoCardHeader h3 a:hover {
+    text-decoration: underline;
+}
+
+.RepoDescription {
+    color: #c9d1d9;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.RepoCardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.RepoUpdated {
+    color: #8b949e;
+    font-size: 0.875rem;
+}
+
+.RepoActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ===== BADGES ===== */
+.Badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.BadgePrivate {
+    background-color: #452c0a;
+    color: #fbbf24;
+}
+
+.BadgePublic {
+    background-color: #0f5132;
+    color: #6ee7b7;
+}
+
+.BadgeProtected {
+    background-color: #0f5132;
+    color: #6ee7b7;
+}
+
+/* ===== EMPTY STATE ===== */
+.EmptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: #161b22;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #30363d;
+}
+
+.EmptyState h2 {
+    color: #f0f6fc;
+    margin-bottom: 1rem;
+}
+
+.EmptyState p {
+    color: #c9d1d9;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ===== REPOSITORY VIEW ===== */
+.RepoView {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.RepoHeader {
+    background-color: #161b22;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #30363d;
+}
+
+.RepoTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.RepoTitle h1 {
+    font-size: 2rem;
+    color: #f0f6fc;
+}
+
+.RepoActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.BranchSelector select {
+    padding: 0.5rem;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background-color: #0d1117;
+    font-size: 0.875rem;
+    color: #f0f6fc;
+}
+
+.RepoContent {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+
+.RepoSidebar {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.SidebarSection {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.SidebarSection:last-child {
+    border-bottom: none;
+}
+
+.SidebarSection h3 {
+    font-size: 1rem;
+    color: #f0f6fc;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.RepoStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.StatItem {
+    text-align: center;
+}
+
+.StatNumber {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #22c55e;
+}
+
+.StatLabel {
+    font-size: 0.875rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.BranchList {
+    list-style: none;
+}
+
+.BranchItem {
+    padding: 1rem 0;
+    border-bottom: 2px solid #21262d;
+}
+
+.BranchItem:last-child {
+    border-bottom: none;
+}
+
+.BranchItem a {
+    color: inherit;
+    font-weight: 500;
+}
+
+.BranchItem.active {
+    background-color: transparent;
+}
+
+.BranchItem.active a {
+    color: inherit;
+    font-weight: 600;
+}
+
+.RepoMain {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* reduced gap to tighten sections vertically */
+}
+
+.ReadmeSection,
+.LicenseSection {
+    background-color: #161b22;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #30363d;
+    overflow: hidden;
+}
+
+.ReadmeSection h3,
+.LicenseSection h3 {
+    padding: 1rem 1.5rem;
+    background-color: #0d1117;
+    border-bottom: 1px solid #30363d;
+    margin: 0;
+    font-size: 1rem;
+    color: #f0f6fc;
+}
+
+.ReadmeContent,
+.LicenseContent {
+    padding: 1.5rem;
+    font-family: 'Fira Code';
+    font-size: 0.875rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+    background-color: #0d1117;
+}
+
+.CommitsSection {
+    background-color: #161b22;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #30363d;
+    overflow: hidden;
+}
+
+.CommitsSection h3 {
+    padding: 1rem 1.5rem;
+    background-color: #0d1117;
+    border-bottom: 1px solid #30363d;
+    margin: 0;
+    font-size: 1rem;
+    color: #f0f6fc;
+}
+
+.CommitList {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.CommitItem {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #30363d;
+    transition: background-color 0.2s ease;
+}
+
+.CommitItem:hover {
+    background-color: #161b22;
+}
+
+.CommitItem:last-child {
+    border-bottom: none;
+}
+
+.CommitMessage {
+    font-weight: 500;
+    color: #f0f6fc;
+    margin-bottom: 0.5rem;
+}
+
+.CommitMeta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #8b949e;
+}
+
+.CommitAuthor {
+    font-weight: 500;
+    color: #22c55e;
+}
+
+.CommitHash {
+    font-family: 'Fira Code';
+    background-color: #0f5132;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    color: #6ee7b7;
+}
+
+/* ===== MODALS ===== */
+.Modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.ModalContent {
+    background-color: #161b22;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+.LargeModal {
+    max-width: 800px;
+}
+
+.ModalContent .Close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #6b7280;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.ModalContent .Close:hover {
+    color: #374151;
+}
+
+/* ===== FOOTER ===== */
+.Footer {
+    background-color: #161b22;
+    color: #8b949e;
+    margin-top: 4rem;
+    border-top: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.FooterContent {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem; 
+    align-items: start;
+}
+
+.FooterSection h3 {
+    color: #f0f6fc;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.FooterSection h4 {
+    color: #f0f6fc;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.FooterSection p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.FooterSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.FooterLinks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.FooterLinks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.FooterLinks li {
+    margin-bottom: 0.5rem;
+}
+
+.FooterLink {
+    color: #8b949e;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.FooterLink:hover {
+    color: #22c55e;
+}
+
+.FooterSocial {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.FooterBottom {
+    border-top: 1px solid #30363d;
+    padding: 1rem 1.5rem;
+    background-color: #0d1117;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+}
+
+.FooterBottom p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #8b949e;
+    text-align: center;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ===== UTILITY CLASSES ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.hidden { display: none; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.inline-grid { display: inline-grid; }
+
+/* ===== BRANCHES PAGE ===== */
+.BranchesPage {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.PageHeaderActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.PageActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.BranchesContent {
+    display: grid;
+    gap: 2rem;
+}
+
+
+.SectionHeader h3 {
+    margin: 0 0 0.5rem 0;
+    color: #24292e;
+}
+
+.SectionHeader p {
+    margin: 0;
+    color: #586069;
+    font-size: 0.875rem;
+}
+
+.CreateBranchForm {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center; 
+}
+
+.CreateBranchForm .FormGroup {
+    flex: 1;
+    margin: 0;
+}
+
+.CreateBranchForm input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #23272b;
+    background-color: #0f1619;
+    color: #c9d1d9;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.CreateBranchForm input[type="text"]::placeholder {
+    color: #6b7280;
+}
+
+.CreateBranchForm input[type="text"]:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34,197,94,0.06);
+}
+
+.CreateBranchForm small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #8b949e;
+    font-size: 0.95rem;
+}
+
+.CreateBranchForm .Btn {
+    white-space: nowrap;
+    align-self: center;
+}
+
+
+.BranchCards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Each Branch Row */
+.BranchCard {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem;
+    background: transparent; 
+}
+
+/* Icon At Left */
+.BranchIcon {
+    color: #9ee6b8; 
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(34,197,94,0.06);
+}
+
+.BranchInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.BranchHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.BranchName {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: #0f5132; 
+    color: #e6fff3;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+
+.BranchMeta {
+    margin: 0;
+    color: #c9d1d9;
+    font-size: 0.875rem;
+}
+
+.BranchActions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.Badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.BadgeProtected {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.EmptyState {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+}
+
+.EmptyStateIcon {
+    color: #30363d;
+    margin-bottom: 1rem;
+}
+
+.EmptyState h3 {
+    margin: 0 0 0.5rem 0;
+    color: #f0f6fc;
+}
+
+.EmptyState p {
+    margin: 0 0 1.5rem 0;
+    color: #c9d1d9;
+}
+
+/* ===== MODALS ===== */
+.Modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.ModalContent {
+    background-color: #161b22;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.Close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #586069;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.Close:hover {
+    color: #22c55e;
+}
+
+.Modal h2 {
+    margin: 0 0 1rem 0;
+    color: #f0f6fc;
+}
+
+.Modal p {
+    margin: 0 0 1.5rem 0;
+    color: #c9d1d9;
+}
+
+.Modal .FormGroup {
+    margin-bottom: 1rem; 
+}
+
+.Modal .FormGroup label {
+    display: block;
+    position: relative;
+    padding-right: 3rem; 
+    cursor: pointer;
+}
+
+.Modal .FormGroup input[type="checkbox"] {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.25rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    transform: scale(1.02);
+}
+
+.Modal .FormGroup label strong {
+    display: inline-block;
+}
+
+.Modal .FormGroup small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* ===== INLINE FORMS ===== */
+.InlineForm {
+    display: inline-block;
+    margin: 0;
+}
+
+
+
+/* ===== REPOSITORY VIEW ===== */
+.RepoView {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.RepoHeader {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.RepoTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.RepoIcon {
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+.RepoTitleContent h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    color: #f0f6fc;
+}
+
+.RepoActions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.BranchSelectorWrapper {
+    display: flex;
+    align-items: center;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #f0f6fc;
+    min-width: 200px;
+}
+
+.BranchSelectorWrapper select {
+    background: none;
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.RepoMenu {
+    position: relative;
+}
+
+.RepoMenuBtn {
+    padding: 0.5rem;
+}
+
+.RepoMenuDropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.RepoMenuDropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.RepoMenuItem {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #f0f6fc;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.RepoMenuItem:hover {
+    background-color: #21262d;
+}
+
+.RepoMenuItem:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.RepoMenuItem:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+.RepoContent {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+
+.RepoSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.SidebarSection {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.SidebarSection h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    color: #f0f6fc;
+    display: flex;
+    align-items: center;
+}
+
+.RepoStats {
+    display: grid;
+    gap: 1rem;
+}
+
+.StatItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.StatIcon {
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+.StatContent {
+    display: flex;
+    flex-direction: column;
+}
+
+.StatNumber {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    line-height: 1;
+}
+
+.StatLabel {
+    font-size: 0.875rem;
+    color: #c9d1d9;
+}
+
+.BranchList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.BranchItem a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    color: #f0f6fc;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.BranchItem a:hover {
+    background-color: rgba(255,255,255,0.03);
+}
+
+.BranchItem.active a {
+    background-color: #22c55e;
+    color: white;
+}
+
+.BranchActions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.BranchName {
+    font-weight: 500;
+}
+
+.BadgeSmall {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.375rem;
+}
+
+.RepoMain {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.ContentSection {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.SectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1rem; /* reduced vertical padding to tighten header */
+    border-bottom: 1px solid #30363d;
+    background-color: #0d1117;
+}
+
+.SectionHeader h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #f0f6fc;
+    display: flex;
+    align-items: center;
+}
+
+.ReadmeContent,
+.LicenseContent {
+    padding: 1rem; 
+}
+
+.CodeBlock {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'Fira Code';
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.MarkdownContent {
+    padding: 1.5rem;
+    line-height: 1.6;
+}
+
+.MarkdownContent h1,
+.MarkdownContent h2,
+.MarkdownContent h3,
+.MarkdownContent h4,
+.MarkdownContent h5,
+.MarkdownContent h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #f0f6fc;
+}
+
+.ReadmeContent {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.ReadmeHeaderControls {
+    margin-bottom: 0.5rem;
+}
+.ReadmeWrap {
+    overflow: hidden;
+    transition: max-height 220ms ease, opacity 180ms ease;
+    max-height: 1200px;
+    opacity: 1;
+}
+.ReadmeWrap.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+.MarkdownContent {
+    background: transparent; 
+    padding: 1.25rem 0.5rem; 
+    border-radius: 6px;
+}
+
+.MarkdownContent h1, .MarkdownContent h2, .MarkdownContent h3 {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+.MarkdownContent p, .MarkdownContent ul, .MarkdownContent ol {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.SplitView {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    width: 100%;
+}
+.SplitEditor, .SplitPreview {
+    flex: 1 1 0;
+    min-width: 0; 
+    display: flex;
+    flex-direction: column;
+}
+.SplitEditor .CodeEditor textarea {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 220px;
+    resize: vertical;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(15,23,42,0.06);
+}
+.SplitPreview .MarkdownPreview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.SplitPreview .MarkdownContent {
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.MarkdownContent p {
+    margin-bottom: 1rem;
+}
+
+.MarkdownContent code {
+    background-color: #0d1117;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-family: 'Fira Code';
+    font-size: 0.875em;
+}
+
+.MarkdownContent pre {
+    background: #061014;
+    border: 1px solid #20262b;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.CommitList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.CommitItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
+}
+
+.CommitItem:hover {
+    border-color: #22c55e;
+}
+
+.CommitAvatar {
+    flex-shrink: 0;
+}
+
+.Avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.AvatarSmall {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+}
+
+.CommitInfo {
+    flex: 1;
+}
+
+.CommitMessage {
+    margin-bottom: 0.5rem;
+}
+
+.CommitMessage a {
+    color: #f0f6fc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.CommitMessage a:hover {
+    color: #22c55e;
+}
+
+.CommitMeta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: #c9d1d9;
+}
+
+.CommitAuthor {
+    font-weight: 500;
+    color: #f0f6fc;
+}
+
+.CommitHash a {
+    color: #c9d1d9;
+    font-family: 'Fira Code';
+}
+
+.CommitHash a:hover {
+    color: #22c55e;
+}
+
+/* ===== REPOSITORY SETTINGS ===== */
+.RepoSettings {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.SettingsContainer {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.SettingsSidebar {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.SettingsNav {
+    display: flex;
+    flex-direction: column;
+}
+
+.SettingsNavItem {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: #f0f6fc;
+    text-decoration: none;
+    border-bottom: 1px solid #30363d;
+    transition: background-color 0.2s ease;
+}
+
+.SettingsNavItem:hover {
+    background-color: #21262d;
+}
+
+.SettingsNavItem.active {
+    background-color: #22c55e;
+    color: white;
+    border-bottom-color: #22c55e;
+}
+
+.SettingsNavItem--danger {
+    color: #dc2626;
+}
+
+.SettingsNavItem--danger:hover {
+    background-color: #2d1818;
+}
+
+.SettingsNavItem--danger.active {
+    background-color: #dc2626;
+    color: white;
+    border-bottom-color: #dc2626;
+}
+
+.SettingsContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.SettingsTab {
+    display: none;
+}
+
+.SettingsTab.active {
+    display: block;
+}
+
+.SettingsSection {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.SettingsSection--danger {
+    border-color: #dc2626;
+}
+
+.SectionHeader {
+    border-bottom: 1px solid #30363d;
+    background-color: #0d1117;
+}
+
+.SectionHeader h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #f0f6fc;
+}
+
+.SectionHeader p {
+    margin: 0;
+    color: #c9d1d9;
+}
+
+.SettingsForm {
+    padding: 2rem;
+}
+
+.CheckboxGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.CheckboxGroup input[type="checkbox"] {
+    margin: 0.25rem 0 0 0;
+    width: auto;
+}
+
+.CheckboxLabel {
+    cursor: pointer;
+    flex: 1;
+}
+
+.CheckboxContent strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #24292e;
+}
+
+.CheckboxContent p {
+    margin: 0;
+    color: #586069;
+    font-size: 0.875rem;
+}
+
+.FormActions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e1e4e8;
+}
+
+.BranchSettings {
+    padding: 2rem;
+}
+
+.BranchProtectionInfo {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f6f8fa;
+    border-radius: 6px;
+}
+
+.BranchProtectionInfo h3 {
+    margin: 0 0 0.5rem 0;
+    color: #24292e;
+}
+
+.BranchProtectionInfo p {
+    margin: 0 0 1rem 0;
+    color: #586069;
+}
+
+.DangerCard {
+    border: 1px solid rgba(220,34,46,0.85); 
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #0d1117; 
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+.DangerCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: rgba(220,34,46,0.06); 
+    border-bottom: 1px solid rgba(220,34,46,0.12);
+}
+
+.DangerCardHeader h3 {
+    margin: 0;
+    color: #ff6b6b; 
+    font-size: 1.5rem;
+}
+
+.DangerCardContent {
+    padding: 1.5rem 1.75rem 2rem;
+    color: #c9d1d9;
+    background-color: transparent; 
+}
+
+.WarningBox {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1rem;
+    background-color: rgba(220,34,46,0.04); 
+    border: 1px solid rgba(220,34,46,0.14);
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    color: #ff8b8b;
+}
+
+.WarningBox strong {
+    color: #ff6b6b;
+}
+
+.DeleteForm {
+    margin-top: 1rem;
+}
+
+.DeleteForm summary {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.DeleteConfirmation {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background-color: rgba(220,34,46,0.02);
+    border: 1px solid rgba(220,34,46,0.12);
+    border-radius: 8px;
+}
+
+/* ===== CREATE FILE PAGE ===== */
+.CreateFilePage {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.CreateFileContainer {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.CreateFileSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.FileTemplates {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.FileTemplates h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    color: #f0f6fc;
+}
+
+.TemplateList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.TemplateBtn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #f0f6fc;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.TemplateBtn:hover {
+    background-color: #22c55e;
+    color: white;
+    border-color: #22c55e;
+}
+
+.FilePreview {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.FilePreview h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    color: #24292e;
+}
+
+.PreviewStats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.PreviewStats .StatItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.PreviewStats .StatLabel {
+    color: #c9d1d9;
+    font-size: 0.875rem;
+}
+
+.PreviewStats .StatValue {
+    font-weight: 600;
+    color: #f0f6fc;
+}
+
+.CreateFileMain {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.CreateFileForm {
+    padding: 2rem;
+}
+
+.EditorHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.EditorHeader label {
+    margin: 0;
+    font-weight: 600;
+    color: #f0f6fc;
+}
+
+.EditorActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.CodeEditor {
+    position: relative;
+    width: 100%;
+}
+
+.CodeEditor textarea {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 400px;
+    padding: 1rem;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    font-family: 'Fira Code';
+    font-size: 0.875rem;
+    line-height: 1.5;
+    resize: vertical;
+    background-color: #0d1117;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.CodeEditor textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    background-color: #161b22;
+}
+
+.CodeEditor textarea.show-line-numbers {
+    padding-left: 3rem;
+    background-image: linear-gradient(transparent 1.4em, #30363d 1.4em);
+    background-size: 1px 1.5em;
+    background-position: 2.5rem 0;
+    background-repeat: repeat-y;
+}
+
+/* ===== UPLOAD FILE PAGE ===== */
+.UploadFilePage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.UploadContainer {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.UploadSidebar {
+    flex: 0 0 300px;
+}
+
+.UploadTips {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.UploadTips h3 {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+}
+
+.TipsList {
+    list-style: none;
+    padding: 0;
+}
+
+.TipsList li {
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #c9d1d9;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.TipsList li:before {
+    content: "✓";
+    color: #22c55e;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.UploadProgress {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.ProgressBar {
+    width: 100%;
+    height: 8px;
+    background: #21262d;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.ProgressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.ProgressText {
+    font-size: 0.875rem;
+    color: #c9d1d9;
+    text-align: center;
+}
+
+.UploadMain {
+    flex: 1;
+}
+
+.UploadZone {
+    background: #161b22;
+    border: 2px dashed #30363d;
+    border-radius: 0.5rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.UploadZone:hover,
+.UploadZone.dragover {
+    border-color: #22c55e;
+    background: #0f5132;
+}
+
+.UploadIcon {
+    margin-bottom: 1rem;
+    color: #22c55e;
+}
+
+.UploadText h3 {
+    margin-bottom: 0.5rem;
+    color: #f0f6fc;
+}
+
+.UploadText p {
+    color: #c9d1d9;
+    margin-bottom: 1.5rem;
+}
+
+.UploadButtons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.UploadSeparator {
+    color: #8b949e;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.SelectedFiles {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.FileItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border: 1px solid #30363d;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+    background: #21262d;
+}
+
+.FileInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.FileIcon {
+    color: #c9d1d9;
+}
+
+.FileDetails {
+    flex: 1;
+}
+
+.FileName {
+    font-weight: 500;
+    color: #f0f6fc;
+    margin-bottom: 0.125rem;
+}
+
+.FileSize {
+    font-size: 0.875rem;
+    color: #8b949e;
+}
+
+.FileStats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #c9d1d9;
+    padding-top: 0.5rem;
+    border-top: 1px solid #30363d;
+}
+
+.UploadForm {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.FormGroup {
+    margin-bottom: 1.5rem;
+}
+
+.FormGroup label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #f0f6fc;
+}
+
+.FormGroup input[type="text"] {
+    border: 1px solid #30363d;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    background-color: #0d1117;
+    color: #f0f6fc;
+}
+
+.FormGroup input[type="text"]:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.FormGroup small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #c9d1d9;
+    font-size: 0.875rem;
+}
+
+.FormActions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #30363d;
+}
+
+/* ===== CODE VIEW STYLES ===== */
+.CodeContent {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+}
+
+.BreadcrumbNav {
+    padding: 1rem;
+    border-bottom: 1px solid #30363d;
+    background: #0d1117;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.BreadcrumbItem {
+    color: #58a6ff;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.BreadcrumbItem:hover {
+    text-decoration: underline;
+}
+
+.BreadcrumbSeparator {
+    color: #8b949e;
+    margin: 0 0.25rem;
+}
+
+.Breadcrumb {
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+.FileList {
+    padding: 0;
+}
+
+.EmptyState {
+    text-align: center;
+    padding: 2.5rem 1.25rem;
+    color: #8b949e;
+}
+
+.EmptyState h3 {
+    margin: 0 0 0.5rem 0;
+    color: #f0f6fc;
+}
+
+.EmptyState p {
+    margin: 0 0 1.25rem 0;
+}
+
+/* ===== SEARCH FUNCTIONALITY ===== */
+.SearchFormContainer {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 1rem;
+}
+
+.NavbarSearch {
+    display: flex;
+    align-items: center;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 0.35rem 0.6rem;
+    width: 100%;
+    min-width: 240px;
+}
+
+.NavbarSearch input {
+    background: transparent;
+    border: none;
+    color: #f0f6fc;
+    flex: 1;
+    font-size: 0.875rem;
+    padding: 0.25rem;
+    outline: none;
+}
+
+.NavbarSearch input::placeholder {
+    color: #8b949e;
+}
+
+.NavbarSearch button {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NavbarSearch button:hover {
+    color: #f0f6fc;
+}
+
+.SearchPage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.SearchHeader {
+    margin-bottom: 2rem;
+}
+
+.SearchForm {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.SearchForm input {
+    flex: 1;
+    max-width: 400px;
+}
+
+.SearchForm select {
+    padding: 0.5rem;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #f0f6fc;
+}
+
+.SearchResults {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.SearchSection h2 {
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+}
+
+/* ===== USER CARDS ===== */
+.UserGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.UserCard {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.UserCard:hover {
+    border-color: #22c55e;
+}
+
+.UserAvatar {
+    width: 50px;
+    height: 50px;
+    background-color: #0d1117;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b949e;
+}
+
+.UserAvatar i {
+    width: 24px;
+    height: 24px;
+}
+
+.UserInfo h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+}
+
+.UserInfo h3 a {
+    color: #22c55e;
+}
+
+.UserInfo h3 a:hover {
+    color: #16a34a;
+}
+
+.UserInfo p {
+    margin: 0;
+    color: #8b949e;
+    font-size: 0.875rem;
+}
+
+.UserJoined {
+    color: #8b949e !important;
+}
+
+/* ===== PROFILE PAGE ===== */
+.ProfilePage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.ProfileHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #30363d;
+}
+
+.ProfileAvatar {
+    width: 80px;
+    height: 80px;
+    background-color: #0d1117;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b949e;
+}
+
+.ProfileAvatar i {
+    width: 40px;
+    height: 40px;
+}
+
+.ProfileInfo h1 {
+    margin: 0 0 0.5rem 0;
+    color: #f0f6fc;
+}
+
+.ProfileEmail {
+    color: #8b949e;
+    margin: 0 0 0.25rem 0;
+}
+
+.ProfileJoined {
+    color: #8b949e;
+    margin: 0;
+}
+
+.ProfileContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.ProfileStats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.Stat {
+    text-align: center;
+}
+
+.StatNumber {
+    display: block;
+    color: #22c55e;
+}
+
+.StatLabel {
+    display: block;
+    font-size: 0.875rem;
+    color: #8b949e;
+    margin-top: 0.25rem;
+}
+
+/* ===== USERS PAGE ===== */
+.UsersPage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.PageHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.PageHeader h1 {
+    margin-bottom: 0.5rem;
+}
+
+.PageHeader p {
+    color: #8b949e;
+}
+
+.UsersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.UserStats {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* ===== PAGINATION ===== */
+.Pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.ProfileActions {
+    margin-top: 1rem;
+}
+
+.ProfileEditForm {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+
+.ProfileEditForm h2 {
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+}
+
+.FormActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.MarkdownContent {
+    padding: 1rem 1.25rem;
+    color: #c9d1d9;
+}
+.MarkdownContent h1, .MarkdownContent h2, .MarkdownContent h3 {
+    color: #f0f6fc;
+}
+.MarkdownContent pre {
+    background: #061014;
+    border: 1px solid #20262b;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+.MarkdownContent code {
+    font-family: 'Fira Code';
+}
+
+/* ===== LINKS PAGE ===== */
+.LinksPage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.LinksPage h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+}
+
+.LinksPage > p {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #8b949e;
+    font-size: 1.1rem;
+}
+
+.LinksContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.LinksSection {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.LinksSection h2 {
+    color: #f0f6fc;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.LinksSection ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.LinksSection li {
+    margin-bottom: 0.75rem;
+}
+
+.LinksSection .FooterLink {
+    display: inline-block;
+    color: #8b949e;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.LinksSection .FooterLink:hover {
+    color: #22c55e;
+    background-color: #0d1117;
+    border-color: #22c55e;
+}

@@ -1,0 +1,295 @@
+{% extends "Base.html" %}
+
+{% block title %}Create New File - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="CreateFilePage">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}">{{ Repository.Name }}</a> /
+            <span>Create New File</span>
+        </div>
+        <div class="PageHeaderActions">
+            <h1>Create New File</h1>
+        </div>
+    </div>
+
+    <div class="CreateFileContainer">
+        <div class="CreateFileSidebar">
+            <div class="FileTemplates">
+                <h3>Quick Templates</h3>
+                <div class="TemplateList">
+                    <button type="button" class="TemplateBtn" onclick="loadTemplate('readme')">
+                        <i data-lucide="book" class="icon" style="margin-right: 0.5rem;"></i>
+                        README.md
+                    </button>
+                    <button type="button" class="TemplateBtn" onclick="loadTemplate('python')">
+                        <i data-lucide="code" class="icon" style="margin-right: 0.5rem;"></i>
+                        Python Script
+                    </button>
+                    <button type="button" class="TemplateBtn" onclick="loadTemplate('html')">
+                        <i data-lucide="file-text" class="icon" style="margin-right: 0.5rem;"></i>
+                        HTML Page
+                    </button>
+                    <button type="button" class="TemplateBtn" onclick="loadTemplate('license')">
+                        <i data-lucide="file-text" class="icon" style="margin-right: 0.5rem;"></i>
+                        LICENSE
+                    </button>
+                </div>
+            </div>
+
+            <div class="FilePreview">
+                <h3>File Preview</h3>
+                <div class="PreviewStats">
+                    <div class="StatItem">
+                        <span class="StatLabel">Lines:</span>
+                        <span class="StatValue" id="lineCount">0</span>
+                    </div>
+                    <div class="StatItem">
+                        <span class="StatLabel">Size:</span>
+                        <span class="StatValue" id="fileSize">0 B</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="CreateFileMain">
+            <form method="post" class="CreateFileForm">
+                <div class="FormGroup">
+                    <label for="filename">Filename</label>
+                    <input type="text" id="filename" name="filename" placeholder="e.g., README.md, src/main.py, docs/index.html" required>
+                    <small>Include The Full Path If You Want To Create Files In Subdirectories (e.g., src/main.py)</small>
+                </div>
+
+                <div class="FormGroup">
+                    <div class="EditorHeader">
+                        <label for="content">File Content</label>
+                        <div class="EditorActions">
+                            <button type="button" class="Btn BtnSmall BtnSecondary" onclick="toggleLineNumbers()">
+                                <i data-lucide="list" class="icon" style="margin-right: 0.25rem;"></i>
+                                Line numbers
+                            </button>
+                        </div>
+                    </div>
+                    <div class="CodeEditor">
+                        <textarea id="content" name="content" rows="20" placeholder="Enter File Content Here..."></textarea>
+                    <div class="MarkdownPreview" id="markdownPreview" style="display:none; margin-top:1rem;">
+                        <h3 style="margin-top:0;">Preview</h3>
+                        <div id="mdPreviewContent" class="MarkdownContent"></div>
+                    </div>
+                </div>
+
+                <div class="FormGroup">
+                    <label for="commit_message">Commit Message</label>
+                    <input type="text" id="commit_message" name="commit_message" placeholder="Add A Descriptive Commit Message" value="Create {{ filename or 'New File' }}" required>
+                </div>
+
+                <div class="FormActions">
+                    <button type="submit" class="Btn BtnPrimary">
+                        <i data-lucide="file-plus" class="icon" style="margin-right: 0.5rem;"></i>
+                        Create File
+                    </button>
+                    <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadTemplate(templateType) {
+    const filenameInput = document.getElementById('filename');
+    const contentTextarea = document.getElementById('content');
+    const commitInput = document.getElementById('commit_message');
+
+    switch(templateType) {
+        case 'readme':
+            filenameInput.value = 'README.md';
+            contentTextarea.value = `# ${filenameInput.value}
+
+A Brief Description Of Your Project.
+
+## Installation
+
+\`\`\`bash
+# Installation Instructions
+\`\`\`
+
+## Usage
+
+\`\`\`python
+# Usage Example
+\`\`\`
+
+## Contributing
+
+1. Fork The Repository
+2. Create Your Feature Branch (\`git checkout -b feature/AmazingFeature\`)
+3. Commit Your Changes (\`git commit -m 'Add some AmazingFeature'\`)
+4. Push To The Branch (\`git push origin feature/AmazingFeature\`)
+5. Open A Pull Request
+
+## License
+
+This Project Is Licensed Under The MIT License - See The [LICENSE](LICENSE) File For Details.`;
+            commitInput.value = 'Add README.md';
+            break;
+
+        case 'python':
+            filenameInput.value = 'main.py';
+            contentTextarea.value = `#!/usr/bin/env python3
+"""
+${filenameInput.value} - A Python Script
+"""
+
+def main():
+    """Main Function"""
+    print("Hello, DevBhoomi!")
+    print("Welcome to your new Python script.")
+
+if __name__ == "__main__":
+    main()`;
+            commitInput.value = 'Add Python Script';
+            break;
+
+        case 'html':
+            filenameInput.value = 'index.html';
+            contentTextarea.value = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${filenameInput.value}</title>
+    <style>
+        body {
+            font-family: 'Poppins';
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        main {
+            margin-bottom: 2rem;
+        }
+        footer {
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome To DevBhoomi</h1>
+        <p>Your Self-Hosted Git Platform</p>
+    </header>
+
+    <main>
+        <h2>About</h2>
+        <p>This Is A Sample HTML Page Created With DevBhoomi.</p>
+
+        <h2>Features</h2>
+        <ul>
+            <li>Repository Management</li>
+            <li>Version Control</li>
+            <li>Collaborative Development</li>
+        </ul>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 DevBhoomi. Built With ❤️</p>
+    </footer>
+</body>
+</html>`;
+            commitInput.value = 'Add HTML Page';
+            break;
+
+        case 'license':
+            filenameInput.value = 'LICENSE';
+            contentTextarea.value = `MIT License
+
+Copyright (c) 2025 DevBhoomi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`;
+            commitInput.value = 'Add MIT License';
+            break;
+    }
+
+    updatePreview();
+}
+
+function updatePreview() {
+    const content = document.getElementById('content').value;
+    const lines = content.split('\n').length;
+    const size = new Blob([content]).size;
+
+    document.getElementById('lineCount').textContent = lines;
+
+    let sizeText = size + ' B';
+    if (size > 1024) sizeText = (size / 1024).toFixed(1) + ' KB';
+    if (size > 1024 * 1024) sizeText = (size / (1024 * 1024)).toFixed(1) + ' MB';
+
+    document.getElementById('fileSize').textContent = sizeText;
+}
+
+function toggleLineNumbers() {
+    const textarea = document.getElementById('content');
+    textarea.classList.toggle('show-line-numbers');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updatePreview();
+});
+</script>
+<script>
+// Markdown Preview Support (Requires Marked.js Loaded In Base.html)
+function renderMarkdownPreview() {
+    const filename = document.getElementById('filename').value || '';
+    const preview = document.getElementById('markdownPreview');
+    const mdContainer = document.getElementById('mdPreviewContent');
+    const content = document.getElementById('content').value || '';
+
+    if (!preview || !mdContainer) return;
+
+    if (filename.toLowerCase().endsWith('.md')) {
+        preview.style.display = 'block';
+        try {
+            mdContainer.innerHTML = marked.parse(content);
+        } catch (e) {
+            mdContainer.textContent = content;
+        }
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+// Wire UpdatePreview To Also Render Markdown
+const originalUpdatePreview = updatePreview;
+updatePreview = function() {
+    originalUpdatePreview();
+    renderMarkdownPreview();
+}
+</script>
+{% endblock %}

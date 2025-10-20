@@ -1,0 +1,223 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ FileName }} - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="FileView">
+    <div class="RepoHeader">
+        <div class="RepoTitle">
+            <h1>{{ Repository.Name }}</h1>
+            {% if Repository.IsPrivate %}
+                <span class="Badge BadgePrivate">Private</span>
+            {% else %}
+                <span class="Badge BadgePublic">Public</span>
+            {% endif %}
+        </div>
+        <div class="RepoActions">
+            <button onclick="cloneRepository()" class="Btn BtnPrimary">Clone</button>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Upload Files</a>
+                <a href="{{ url_for('RepoRoutes.CreateFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Create File</a>
+            {% endif %}
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Overview</a>
+            <a href="{{ url_for('RepoRoutes.ViewBranches', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Branches</a>
+            <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Code</a>
+            <a href="{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Commits</a>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Settings</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="FileContent">
+        <!-- Breadcrumb Navigation -->
+        <div class="BreadcrumbNav">
+            {% for crumb in Breadcrumbs %}
+                {% if not loop.last %}
+                    <a href="{% if crumb.path %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, path=crumb.path) }}{% else %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}{% endif %}" class="BreadcrumbItem">{{ crumb.name }}</a>
+                    <span class="BreadcrumbSeparator">/</span>
+                {% else %}
+                    <span class="BreadcrumbItem BreadcrumbCurrent">{{ crumb.name }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- File Header -->
+        <div class="FileHeader">
+            <div class="FileInfo">
+                <h2>{{ FileName }}</h2>
+                <div class="FileMeta">
+                    <span class="FileLines">{{ FileContent.split('\n')|length }} lines</span>
+                    <span class="FileSize">{{ FileContent|length }} bytes</span>
+                </div>
+            </div>
+            <div class="FileActions">
+                {% if Repository.OwnerId == CurrentUser.Id %}
+                    <a href="{{ url_for('RepoRoutes.EditFile', RepoName=Repository.Name, FilePath=FilePath) }}" class="Btn BtnSecondary">Edit</a>
+                {% endif %}
+                <button onclick="copyFileContent()" class="Btn BtnSecondary">Copy</button>
+                <button onclick="downloadFile()" class="Btn BtnSecondary">Download</button>
+            </div>
+        </div>
+
+        <!-- File Content -->
+        <div class="FileViewer">
+            <pre class="FileCode" id="fileContent"><code>{{ FileContent }}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+function cloneRepository() {
+    const cloneUrl = `git clone ${window.location.origin}/repo/{{ Repository.Name | tojson | safe }}.git`;
+    navigator.clipboard.writeText(cloneUrl).then(() => {
+        alert('Clone URL Copied To Clipboard: ' + cloneUrl);
+    });
+}
+
+function copyFileContent() {
+    const content = document.getElementById('fileContent').textContent;
+    navigator.clipboard.writeText(content).then(() => {
+        alert('File Content Copied To Clipboard: ' + content);
+    });
+}
+
+function downloadFile() {
+    const content = document.getElementById('fileContent').textContent;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '{{ FileName | tojson | safe }}';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filename = '{{ FileName | e }}'.toLowerCase();
+    if (!(filename.endsWith('.md') || filename.endsWith('.markdown'))) return;
+
+    const raw = document.getElementById('fileContent').textContent || '';
+    const viewer = document.querySelector('.FileViewer');
+
+    function renderHtml(html) {
+        // Sanitize If DOMPurify Is Available, Otherwise Insert Raw HTML (Less Safe)
+        const safe = (window.DOMPurify && typeof DOMPurify.sanitize === 'function') ? DOMPurify.sanitize(html) : html;
+        viewer.innerHTML = `<div class="MarkdownContent">${safe}</div>`;
+    }
+
+    // If Marked Is Present, Render Immediately
+    if (window.marked && typeof window.marked.parse === 'function') {
+        try {
+            const html = marked.parse(raw);
+            renderHtml(html);
+        } catch (e) {
+            console.error('Markdown Render Failed', e);
+        }
+        return;
+    }
+
+    // Otherwise, Load Marked Dynamically Then Render
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+    script.onload = () => {
+        try {
+            const html = window.marked.parse(raw);
+            renderHtml(html);
+        } catch (e) {
+            console.error('Markdown Render Failed After Loading Marked', e);
+        }
+    };
+    script.onerror = () => {
+        console.error('Failed To Load Marked.js For Markdown Rendering');
+    };
+    document.head.appendChild(script);
+});
+</script>
+
+<style>
+/* Use Site-Wide Dark Theme Styles And Spacing So FileView Integrates With The Rest Of The App */
+.FileView {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.RepoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #0f1619;
+    border: 1px solid #20262b;
+}
+
+.RepoTitle h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #f0f6fc;
+}
+
+/* Reuse .Badge Classes Already Present In Global Stylesheet */
+.BadgePrivate { background: #0b1013; color: #9aa4ad; border: 1px solid #243033; }
+.BadgePublic { background: #0f5132; color: #6ee7b7; }
+
+.RepoActions { display: flex; gap: 8px; }
+
+/* Use Existing Site Btn Classes; Make Sure Spacing Matches */
+.FileContent {
+    background: #0d1117;
+    border: 1px solid #20262b;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.BreadcrumbNav {
+    padding: 12px 16px;
+    border-bottom: 1px solid #20262b;
+    background: #0d1117;
+}
+
+.BreadcrumbItem { color: #58a6ff; font-size: 0.95rem; }
+.BreadcrumbCurrent { color: #f0f6fc; font-weight: 600; }
+.BreadcrumbSeparator { color: #8b949e; margin: 0 6px; }
+
+.FileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #20262b;
+}
+
+.FileInfo h2 { margin: 0; font-size: 18px; color: #f0f6fc; }
+.FileMeta { color: #8b949e; font-size: 13px; }
+
+.FileActions { display: flex; gap: 8px; }
+
+.FileViewer { padding: 0; }
+
+.FileCode {
+    margin: 0;
+    padding: 18px;
+    background: #061014;
+    border: none;
+    border-radius: 0 0 8px 8px;
+    font-family: 'Fira Code';
+    font-size: 13px;
+    line-height: 1.6;
+    overflow: auto;
+    white-space: pre-wrap; 
+    word-break: break-word;
+    color: #c9d1d9;
+}
+
+.FileCode code { background: transparent; border: 0; padding: 0; color: inherit; }
+</style>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "Base.html" %}
+
+{% block title %}Settings - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="RepoSettings">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}">{{ Repository.Name }}</a> /
+            <span>Settings</span>
+        </div>
+        <div class="PageHeaderActions">
+            <h1>Settings</h1>
+        </div>
+    </div>
+
+    <div class="SettingsContainer">
+        <div class="SettingsSidebar">
+            <nav class="SettingsNav">
+                <a href="#general" class="SettingsNavItem active" onclick="showSettingsTab('general')">
+                    <i data-lucide="settings" class="icon" style="margin-right: 0.5rem;"></i>
+                    General
+                </a>
+                <a href="#branches" class="SettingsNavItem" onclick="showSettingsTab('branches')">
+                    <i data-lucide="git-branch" class="icon" style="margin-right: 0.5rem;"></i>
+                    Branches
+                </a>
+                {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="#danger" class="SettingsNavItem SettingsNavItem--danger" onclick="showSettingsTab('danger')">
+                    <i data-lucide="alert-triangle" class="icon" style="margin-right: 0.5rem;"></i>
+                    Danger Zone
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+
+        <div class="SettingsContent">
+            <!-- General Settings -->
+            <div id="general-tab" class="SettingsTab active">
+                <div class="SettingsSection">
+                    <div class="SectionHeader">
+                        <h2>General Settings</h2>
+                        <p>Basic Information About Your Repository</p>
+                    </div>
+
+                    <form method="post" class="SettingsForm">
+                        <input type="hidden" name="action" value="update_general">
+                        <div class="FormGroup">
+                            <label for="Name">Repository Name</label>
+                            <input type="text" id="Name" name="Name" value="{{ Repository.Name }}" required>
+                            <small>Repository Names Must Be Unique Within Your Account</small>
+                        </div>
+
+                        <div class="FormGroup">
+                            <label for="Description">Description</label>
+                            <textarea id="Description" name="Description" rows="3" placeholder="A Short Description Of Your Repository">{{ Repository.Description or '' }}</textarea>
+                            <small>A Description Of What This Repository Contains</small>
+                        </div>
+
+                        <div class="FormGroup">
+                            <div class="CheckboxGroup">
+                                <input type="checkbox" id="IsPrivate" name="IsPrivate" {% if Repository.IsPrivate %}checked{% endif %}>
+                                <label for="IsPrivate" class="CheckboxLabel">
+                                    <div class="CheckboxContent">
+                                        <strong>Private Repository</strong>
+                                        <p>Only You And People You Explicitly Share With Will Be Able To See This Repository</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="FormActions">
+                            <button type="submit" class="Btn BtnPrimary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Branches Settings -->
+            <div id="branches-tab" class="SettingsTab">
+                <div class="SettingsSection">
+                    <div class="SectionHeader">
+                        <h2>Branch Settings</h2>
+                        <p>Configure Default Branch And Branch Protection Rules</p>
+                    </div>
+
+                    <div class="BranchSettings">
+                        <div class="FormGroup">
+                            <label for="DefaultBranch">Default Branch</label>
+                            <select id="DefaultBranch" name="DefaultBranch">
+                                <option value="main" {% if not Repository.DefaultBranch or Repository.DefaultBranch == 'main' %}selected{% endif %}>main</option>
+                                <option value="master" {% if Repository.DefaultBranch == 'master' %}selected{% endif %}>master</option>
+                            </select>
+                            <small>The Default Branch For This Repository</small>
+                        </div>
+
+                        <div class="BranchProtectionInfo">
+                            <h3>Branch Protection</h3>
+                            <p>Protect Important Branches By Setting Up Rules That Require Certain Conditions To Be Met Before Changes Can Be Merged.</p>
+                            <a href="{{ url_for('RepoRoutes.ViewBranches', RepoName=Repository.Name) }}" class="Btn BtnSecondary">
+                                Manage Branch Protection Rules
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            {% if Repository.OwnerId == CurrentUser.Id %}
+            <div id="danger-tab" class="SettingsTab">
+                <div class="SettingsSection SettingsSection--danger">
+                    <div class="SectionHeader">
+                        <h2>Danger Zone</h2>
+                        <p>Irreversible And Destructive Actions</p>
+                    </div>
+
+                    <div class="DangerSection">
+                        <div class="DangerCard">
+                            <div class="DangerCardHeader">
+                                <h3>Delete Repository</h3>
+                                <i data-lucide="alert-triangle" class="icon" style="color: #dc2626;"></i>
+                            </div>
+                            <div class="DangerCardContent">
+                                <p>Once You Delete This Repository, There Is No Going Back. This Will Permanently Delete The <strong>{{ Repository.Name }}</strong> Repository, Wiki, Issues, And Remove All Collaborator Associations.</p>
+
+                                <details class="DeleteForm">
+                                    <summary class="Btn BtnDanger">Delete This Repository</summary>
+                                    <div class="DeleteConfirmation">
+                                        <div class="WarningBox">
+                                            <i data-lucide="alert-triangle" class="icon" style="margin-right: 0.5rem;"></i>
+                                            <strong>This Action Cannot Be Undone.</strong> This Will Permanently Delete The <strong>{{ Repository.Name }}</strong> Repository.
+                                        </div>
+                                        <form method="post" onsubmit="return confirm('Are You Absolutely Sure You Want To Delete This Repository? This Action Cannot Be Undone.')">
+                                            <input type="hidden" name="action" value="delete">
+                                            <div class="FormGroup">
+                                                <label for="confirm_name">Type <strong>{{ Repository.Name }}</strong> To Confirm :</label>
+                                                <input type="text" id="confirm_name" name="confirm_name" required placeholder="{{ Repository.Name }}">
+                                            </div>
+                                            <button type="submit" class="Btn BtnDanger">I Understand The Consequences, Delete This Repository</button>
+                                        </form>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function showSettingsTab(tabName) {
+    // Hide All Tabs
+    const tabs = document.querySelectorAll('.SettingsTab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Remove Active Class From Nav Items
+    const navItems = document.querySelectorAll('.SettingsNavItem');
+    navItems.forEach(item => item.classList.remove('active'));
+
+    // Show Selected Tab
+    const selectedTab = document.getElementById(tabName + '-tab');
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+
+    // Add Active Class To Clicked Nav Item
+    const clickedNavItem = document.querySelector(`[onclick="showSettingsTab('${tabName}')"]`);
+    if (clickedNavItem) {
+        clickedNavItem.classList.add('active');
+    }
+}
+</script>
+{% endblock %}

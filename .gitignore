@@ -1,0 +1,166 @@
+# Byte-Compiled / Optimized / DLL Files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C Extensions
+*.so
+
+# Distribution / Packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually These Files Are Written By A Python Script From A Template
+#  Before PyInstaller Builds The Exe, So As To Inject Date/Other Infos Into It.
+*.manifest
+*.spec
+
+# Installer Logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit Test / Coverage Reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django Stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask Stuff:
+instance/
+.webassets-cache
+
+# Scrapy Stuff:
+.scrapy
+
+# Sphinx Documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According To pypa/pipenv#598, It Is Recommended To Include Pipfile.lock In Version Control.
+#   However, In Case Of Collaboration, If Having Platform-Specific Dependencies Or Dependencies
+#   Having No Cross-Platform Support, Pipenv May Install Dependencies That Don't Work, Or Not
+#   Install All Needed Dependencies.
+#Pipfile.lock
+
+# PEP 582; Used By e.g. github.com/David-OConnor/pyflow
+__pyp__.py
+
+# Celery Stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath Parsed Files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder Project Settings
+.spyderproject
+.spyproject
+
+# Rope Project Settings
+.ropeproject
+
+# mkdocs Documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre Type Checker
+.pyre/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+
+# Session Files
+Flask_Session/
+
+# Uploads (If Not Version Controlled)
+Uploads/
+
+# Repositories (Git Repos Should Not Be In Version Control)
+Repositories/
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+*.tmp
+*.temp

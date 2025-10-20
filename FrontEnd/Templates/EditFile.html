@@ -1,0 +1,309 @@
+{% extends "Base.html" %}
+
+{% block title %}Edit {{ FileName }} - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="EditFile">
+    <div class="RepoHeader">
+        <div class="RepoTitle">
+            <h1>{{ Repository.Name }}</h1>
+            {% if Repository.IsPrivate %}
+                <span class="Badge BadgePrivate">Private</span>
+            {% else %}
+                <span class="Badge BadgePublic">Public</span>
+            {% endif %}
+        </div>
+        <div class="RepoActions">
+            <button onclick="cloneRepository()" class="Btn BtnPrimary">Clone</button>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Upload Files</a>
+                <a href="{{ url_for('RepoRoutes.CreateFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">Create File</a>
+            {% endif %}
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Overview</a>
+            <a href="{{ url_for('RepoRoutes.ViewBranches', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Branches</a>
+            <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Code</a>
+            <a href="{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Commits</a>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=Repository.Name) }}" class="Btn BtnSecondary">Settings</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="EditContent">
+        <!-- Breadcrumb Navigation -->
+        <div class="BreadcrumbNav">
+            <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}" class="BreadcrumbItem">{{ Repository.Name }}</a>
+            {% for crumb in Breadcrumbs %}
+                {% if not loop.last %}
+                    <span class="BreadcrumbSeparator">/</span>
+                    {% if crumb.path %}
+                        <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, path=crumb.path) }}" class="BreadcrumbItem">{{ crumb.name }}</a>
+                    {% else %}
+                        <a href="{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}" class="BreadcrumbItem">{{ crumb.name }}</a>
+                    {% endif %}
+                {% else %}
+                    <span class="BreadcrumbSeparator">/</span>
+                    <span class="BreadcrumbItem BreadcrumbCurrent">{{ crumb.name }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Edit Form -->
+        <div class="EditForm">
+            <form method="post">
+                <div class="FileHeader">
+                    <div class="FileInfo">
+                        <h2>Editing {{ FileName }}</h2>
+                        <div class="FileMeta">
+                            <span class="FileLines">{{ FileContent.split('\n')|length }} lines</span>
+                            <span class="FileSize">{{ FileContent|length }} bytes</span>
+                        </div>
+                    </div>
+                    <div class="FileActions">
+                        <a href="{{ url_for('RepoRoutes.ViewFile', RepoName=Repository.Name, FilePath=FilePath) }}" class="Btn BtnSecondary">Cancel</a>
+                        <button type="submit" class="Btn BtnPrimary">Commit Changes</button>
+                    </div>
+                </div>
+
+                <div class="FormGroup">
+                    <label for="content">File Content</label>
+                    <textarea id="content" name="content" rows="25" class="CodeEditor">{{ FileContent }}</textarea>
+                </div>
+
+                <div class="FormGroup">
+                    <label for="commit_message">Commit Message</label>
+                    <input type="text" id="commit_message" name="commit_message" value="Update {{ FileName }}" required>
+                    <small>Describe The Changes You Made To This File</small>
+                </div>
+
+                <div class="FormActions">
+                    <a href="{{ url_for('RepoRoutes.ViewFile', RepoName=Repository.Name, FilePath=FilePath) }}" class="Btn BtnSecondary">Cancel</a>
+                    <button type="submit" class="Btn BtnPrimary">Commit Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function cloneRepository() {
+    const cloneUrl = `git clone ${window.location.origin}/repo/{{ Repository.Name | tojson | safe }}.git`;
+    navigator.clipboard.writeText(cloneUrl).then(() => {
+        alert('Clone URL Copied To Clipboard : ' + cloneUrl);
+    });
+}
+
+// Auto-Resize Textarea
+document.getElementById('content').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+});
+
+// Set Initial Height
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.getElementById('content');
+    textarea.style.height = textarea.scrollHeight + 'px';
+});
+</script>
+
+<style>
+.EditFile {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.RepoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d1d9e0;
+}
+
+.RepoTitle h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #24292f;
+}
+
+.Badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.BadgePrivate {
+    background: #f6f8fa;
+    color: #656d76;
+    border: 1px solid #d1d9e0;
+}
+
+.BadgePublic {
+    background: #56d364;
+    color: white;
+}
+
+.RepoActions {
+    display: flex;
+    gap: 8px;
+}
+
+.Btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.BtnPrimary {
+    background: #238636;
+    color: white;
+    border-color: #238636;
+}
+
+.BtnSuccess {
+    background: #238636;
+    color: white;
+    border-color: #238636;
+}
+
+.BtnSecondary {
+    background: #f6f8fa;
+    color: #24292f;
+    border-color: #d1d9e0;
+}
+
+.EditContent {
+    background: white;
+    border: 1px solid #d1d9e0;
+    border-radius: 6px;
+}
+
+.BreadcrumbNav {
+    padding: 16px;
+    border-bottom: 1px solid #d1d9e0;
+    background: #f6f8fa;
+    border-radius: 6px 6px 0 0;
+}
+
+.BreadcrumbItem {
+    color: #0969da;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.BreadcrumbItem:hover {
+    text-decoration: underline;
+}
+
+.BreadcrumbCurrent {
+    color: #24292f;
+    font-weight: 500;
+}
+
+.BreadcrumbSeparator {
+    color: #656d76;
+    margin: 0 4px;
+}
+
+.EditForm {
+    padding: 20px;
+}
+
+.FileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d1d9e0;
+}
+
+.FileInfo h2 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    color: #24292f;
+}
+
+.FileMeta {
+    color: #656d76;
+    font-size: 12px;
+}
+
+.FileMeta span {
+    margin-right: 16px;
+}
+
+.FileActions {
+    display: flex;
+    gap: 8px;
+}
+
+.FormGroup {
+    margin-bottom: 20px;
+}
+
+.FormGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #24292f;
+}
+
+.CodeEditor {
+    width: 100%;
+    border: 1px solid #d1d9e0;
+    border-radius: 6px;
+    font-family: 'Fira Code';
+    font-size: 12px;
+    line-height: 1.45;
+    resize: vertical;
+    min-height: 400px;
+    background: #f6f8fa;
+    color: #24292f;
+}
+
+.CodeEditor:focus {
+    outline: none;
+    border-color: #0969da;
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+.FormGroup input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #d1d9e0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.FormGroup input[type="text"]:focus {
+    outline: none;
+    border-color: #0969da;
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+.FormGroup small {
+    display: block;
+    margin-top: 4px;
+    color: #656d76;
+    font-size: 12px;
+}
+
+.FormActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid #d1d9e0;
+}
+</style>
+{% endblock %}

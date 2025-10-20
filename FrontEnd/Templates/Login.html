@@ -1,0 +1,23 @@
+{% extends "Base.html" %}
+
+{% block title %}Login - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="AuthContainer">
+    <div class="AuthCard">
+        <h1 class="AuthTitle">Login To DevBhoomi</h1>
+        <form method="post" class="AuthForm">
+            <div class="FormGroup InputGroup">
+                <label for="Username">Username</label>
+                <input class="FormControl" type="text" id="Username" name="Username" required autofocus>
+            </div>
+            <div class="FormGroup InputGroup">
+                <label for="Password">Password</label>
+                <input class="FormControl" type="password" id="Password" name="Password" required>
+            </div>
+            <button type="submit" class="Btn BtnPrimary BtnFull PillBtn">Login</button>
+        </form>
+        <p class="AuthLink small">Don't Have An Account? <a href="{{ url_for('AuthRoutes.Register') }}">Register Here</a></p>
+    </div>
+</div>
+{% endblock %}

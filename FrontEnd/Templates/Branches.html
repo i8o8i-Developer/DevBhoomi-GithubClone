@@ -1,0 +1,161 @@
+{% extends "Base.html" %}
+
+{% block title %}Branches - {{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="BranchesPage">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name) }}">{{ Repository.Name }}</a> /
+            <span>Branches</span>
+        </div>
+        <div class="PageHeaderActions">
+            <h1>Branches</h1>
+            <div class="PageActions">
+                <a href="{{ url_for('BranchRoutes.CreateBranch', RepoName=Repository.Name) }}" class="Btn BtnPrimary">
+                    <i data-lucide="plus" class="icon" style="margin-right: 0.5rem;"></i>
+                    New Branch
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="BranchesContent">
+        <div class="CreateBranchSection">
+            <div class="SectionHeader">
+                <h3>Create New Branch</h3>
+                <p>Create A New Branch From The Current Branch</p>
+            </div>
+            <form action="{{ url_for('BranchRoutes.CreateBranch', RepoName=Repository.Name) }}" method="post" class="CreateBranchForm">
+                <div class="FormGroup">
+                    <label for="BranchName">Branch Name</label>
+                    <input type="text" id="BranchName" name="BranchName" placeholder="Feature/New-Feature/Development" required>
+                    <small>Branch Names Must Be Unique And Follow Git Naming Conventions</small>
+                </div>
+                <button type="submit" class="Btn BtnPrimary">Create Branch</button>
+            </form>
+        </div>
+
+        <div class="BranchesList">
+            <div class="SectionHeader">
+                <h3>All Branches</h3>
+                <p>{{ Branches|length }} Branch{{ 'es' if Branches|length != 1 else '' }}</p>
+            </div>
+            {% if Branches %}
+                <div class="BranchCards">
+                    {% for branch in Branches %}
+                        <div class="BranchCard">
+                            <div class="BranchIcon">
+                                <i data-lucide="git-branch" class="icon"></i>
+                            </div>
+                            <div class="BranchInfo">
+                                <div class="BranchHeader">
+                                    <h4 class="BranchName">{{ branch.Name }}</h4>
+                                    {% if branch.IsProtected %}
+                                        <span class="Badge BadgeProtected">
+                                            <i data-lucide="shield" class="icon" style="margin-right: 0.25rem;"></i>
+                                            Protected
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <p class="BranchMeta">
+                                    Created {{ branch.CreatedAt.strftime('%b %d, %Y') }}
+                                    {% if branch.LastCommit %}
+                                        • Last Commit {{ branch.LastCommit.Date.strftime('%b %d, %Y') if branch.LastCommit.Date else 'unknown' }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="BranchActions">
+                                <a href="{{ url_for('RepoRoutes.ViewRepository', RepoName=Repository.Name, branch=branch.Name) }}" class="Btn BtnSmall BtnSecondary">
+                                    <i data-lucide="eye" class="icon" style="margin-right: 0.25rem;"></i>
+                                    Browse
+                                </a>
+                                {% if Repository.OwnerId == CurrentUser.Id %}
+                                    <button type="button" class="Btn BtnSmall BtnSecondary protect-btn" data-branch-id="{{ branch.Id }}" data-branch-name="{{ branch.Name | e }}">
+                                        <i data-lucide="shield" class="icon" style="margin-right: 0.25rem;"></i>
+                                        Protect
+                                    </button>
+                                {% endif %}
+                                {% if Repository.OwnerId == CurrentUser.Id and branch.Name != 'main' %}
+                                    <form action="{{ url_for('BranchRoutes.DeleteBranch', RepoName=Repository.Name, BranchName=branch.Name) }}" method="post" class="InlineForm" onsubmit="return confirm('Are You Sure You Want To Delete This Branch? This Action Cannot Be Undone.')">
+                                        <button type="submit" class="Btn BtnSmall BtnDanger">
+                                            <i data-lucide="trash-2" class="icon" style="margin-right: 0.25rem;"></i>
+                                            Delete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="EmptyState">
+                    <div class="EmptyStateIcon">
+                        <i data-lucide="git-branch" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+                    </div>
+                    <h3>No Branches Found</h3>
+                    <p>This Repository Doesn't Have Any Branches Yet. Create Your First Branch to Get Started.</p>
+                    <a href="{{ url_for('BranchRoutes.CreateBranch', RepoName=Repository.Name) }}" class="Btn BtnPrimary">
+                        Create Your First Branch
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Branch Protection Modal -->
+<div id="ProtectionModal" class="Modal">
+    <div class="ModalContent">
+        <span class="Close" onclick="hideProtectionModal()">&times;</span>
+        <h2>Branch Protection Rules</h2>
+        <p id="ProtectionBranchName"></p>
+        <form id="ProtectionForm">
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="NoForcePush" name="no_force_push">
+                    <strong>Restrict Force Pushes</strong><br>
+                    <small>Prevent Users From Force Pushing to This Branch</small>
+                </label>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="ReviewRequired" name="review_required">
+                    <strong>Require Pull Request Reviews</strong><br>
+                    <small>Require Review from Code Owners or Other Contributors</small>
+                </label>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="RequireStatusChecks" name="require_status_checks">
+                    <strong>Require Status Checks to Pass</strong><br>
+                    <small>Require CI/Tests To Pass Before Merging</small>
+                </label>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="RequireUpToDate" name="require_up_to_date">
+                    <strong>Require Branches to Be Up to Date</strong><br>
+                    <small>Require Branches to Be Up to Date Before Merging</small>
+                </label>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="RestrictPushes" name="restrict_pushes">
+                    <strong>Restrict Who Can Push</strong><br>
+                    <small>Only Allow Specific Users to Push to This Branch</small>
+                </label>
+            </div>
+            <div class="FormGroup">
+                <label>
+                    <input type="checkbox" id="LinearHistory" name="linear_history">
+                    <strong>Require Linear History</strong><br>
+                    <small>Prevent Merge Commits and Enforce Linear History</small>
+                </label>
+            </div>
+            <button type="submit" class="Btn BtnPrimary">Save Protection Rules</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

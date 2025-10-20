@@ -1,0 +1,287 @@
+{% extends "Base.html" %}
+
+{% block title %}{{ Repository.Name }} - DevBhoomi{% endblock %}
+
+{% block content %}
+<div class="RepoView">
+    <div class="PageHeader">
+        <div class="Breadcrumb">
+            <a href="{{ url_for('RepoRoutes.Dashboard') }}">Dashboard</a> /
+            <span>{{ Repository.Name }}</span>
+        </div>
+    </div>
+
+    <div class="RepoHeader">
+        <div class="RepoTitle">
+            <div class="RepoIcon">
+                <i data-lucide="book-open" class="icon"></i>
+            </div>
+            <div class="RepoTitleContent">
+                <h1>{{ Repository.Name }}</h1>
+                {% if Repository.IsPrivate %}
+                    <span class="Badge BadgePrivate">
+                        <i data-lucide="lock" class="icon" style="margin-right: 0.25rem;"></i>
+                        Private
+                    </span>
+                {% else %}
+                    <span class="Badge BadgePublic">
+                        <i data-lucide="globe" class="icon" style="margin-right: 0.25rem;"></i>
+                        Public
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="RepoActions">
+            <div class="BranchSelector">
+                <div class="BranchSelectorWrapper">
+                    <i data-lucide="git-branch" class="icon" style="margin-right: 0.5rem;"></i>
+                    <select id="branchSelect" onchange="switchBranch()">
+                        {% for branch in Branches %}
+                            <option value="{{ branch.Name }}" {% if branch.Name == CurrentBranch %}selected{% endif %}>{{ branch.Name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button onclick="cloneRepository()" class="Btn BtnPrimary">
+                <i data-lucide="copy" class="icon" style="margin-right: 0.5rem;"></i>
+                Clone
+            </button>
+            {% if Repository.OwnerId == CurrentUser.Id %}
+                <a href="{{ url_for('RepoRoutes.UploadFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">
+                    <i data-lucide="upload" class="icon" style="margin-right: 0.5rem;"></i>
+                    Upload Files
+                </a>
+                <a href="{{ url_for('RepoRoutes.CreateFile', RepoName=Repository.Name) }}" class="Btn BtnSuccess">
+                    <i data-lucide="file-plus" class="icon" style="margin-right: 0.5rem;"></i>
+                    Create File
+                </a>
+            {% endif %}
+            <div class="RepoMenu">
+                <button class="Btn BtnSecondary RepoMenuBtn" onclick="toggleRepoMenu()">
+                    <i data-lucide="more-horizontal" class="icon"></i>
+                </button>
+                <div class="RepoMenuDropdown">
+                    <a href="{{ url_for('RepoRoutes.ViewBranches', RepoName=Repository.Name) }}" class="RepoMenuItem">
+                        <i data-lucide="git-branch" class="icon" style="margin-right: 0.5rem;"></i>
+                        Branches
+                    </a>
+                    <a href="{% if CurrentBranch and CurrentBranch != 'main' %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name, BranchName=CurrentBranch) }}{% else %}{{ url_for('RepoRoutes.ViewCode', RepoName=Repository.Name) }}{% endif %}" class="RepoMenuItem">
+                        <i data-lucide="code" class="icon" style="margin-right: 0.5rem;"></i>
+                        Code
+                    </a>
+                    <a href="{% if CurrentBranch and CurrentBranch != 'main' %}{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name, BranchName=CurrentBranch) }}{% else %}{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name) }}{% endif %}" class="RepoMenuItem">
+                        <i data-lucide="git-commit" class="icon" style="margin-right: 0.5rem;"></i>
+                        Commits
+                    </a>
+                    {% if Repository.OwnerId == CurrentUser.Id %}
+                        <a href="{{ url_for('RepoRoutes.RepositorySettings', RepoName=Repository.Name) }}" class="RepoMenuItem">
+                            <i data-lucide="settings" class="icon" style="margin-right: 0.5rem;"></i>
+                            Settings
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="RepoContent">
+        <div class="RepoSidebar">
+            <div class="SidebarSection">
+                <h3>
+                    <i data-lucide="info" class="icon" style="margin-right: 0.5rem;"></i>
+                    About
+                </h3>
+                <p>{{ Repository.Description or 'No Description Provided.' }}</p>
+            </div>
+
+            <div class="SidebarSection">
+                <h3>
+                    <i data-lucide="message-square" class="icon" style="margin-right: 0.5rem;"></i>
+                    Repository Stats
+                </h3>
+                <div class="RepoStats">
+                    <div class="StatItem">
+                        <div class="StatIcon">
+                            <i data-lucide="git-commit" class="icon"></i>
+                        </div>
+                        <div class="StatContent">
+                            <span class="StatNumber">{{ Stats.commits }}</span>
+                            <span class="StatLabel">Commits</span>
+                        </div>
+                    </div>
+                    <div class="StatItem">
+                        <div class="StatIcon">
+                            <i data-lucide="git-branch" class="icon"></i>
+                        </div>
+                        <div class="StatContent">
+                            <span class="StatNumber">{{ Stats.branches }}</span>
+                            <span class="StatLabel">Branches</span>
+                        </div>
+                    </div>
+                    <div class="StatItem">
+                        <div class="StatIcon">
+                            <i data-lucide="file" class="icon"></i>
+                        </div>
+                        <div class="StatContent">
+                            <span class="StatNumber">{{ Stats.files }}</span>
+                            <span class="StatLabel">Files</span>
+                        </div>
+                    </div>
+                    <div class="StatItem">
+                        <div class="StatIcon">
+                            <i data-lucide="info" class="icon"></i>
+                        </div>
+                        <div class="StatContent">
+                            <span class="StatNumber">{{ (Stats.size / 1024)|round(1) }} KB</span>
+                            <span class="StatLabel">Size</span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="SidebarSection">
+                <h3>
+                    <i data-lucide="git-branch" class="icon" style="margin-right: 0.5rem;"></i>
+                    Branches
+                </h3>
+                <ul class="BranchList">
+                    {% for branch in Branches %}
+                        <li class="BranchItem {% if branch.Name == CurrentBranch %}active{% endif %}">
+                            <a href="#" onclick="switchToBranch('{{ branch.Name }}')">
+                                <span class="BranchName">{{ branch.Name }}</span>
+                                {% if branch.IsProtected %}
+                                    <span class="Badge BadgeProtected BadgeSmall">
+                                        <i data-lucide="shield" class="icon"></i>
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="RepoMain">
+
+            <!-- LICENSE Section -->
+            {% if License %}
+                <div class="ContentSection">
+                    <div class="SectionHeader">
+                        <h3>
+                            <i data-lucide="file-text" class="icon" style="margin-right: 0.5rem;"></i>
+                            {{ License.filename }}
+                        </h3>
+                    </div>
+                    <div class="LicenseContent">
+                        <pre class="CodeBlock">{{ License.content }}</pre>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="ContentSection">
+                <div class="SectionHeader">
+                    <h3>
+                        <i data-lucide="git-commit" class="icon" style="margin-right: 0.5rem;"></i>
+                        Recent Commits
+                    </h3>
+                    <a href="{% if CurrentBranch and CurrentBranch != 'main' %}{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name, BranchName=CurrentBranch) }}{% else %}{{ url_for('RepoRoutes.ViewCommits', RepoName=Repository.Name) }}{% endif %}" class="Btn BtnSmall BtnSecondary">
+                        View All Commits
+                    </a>
+                </div>
+                {% if Commits %}
+                    <div class="CommitList">
+                        {% for commit in Commits %}
+                            <div class="CommitItem">
+                                <div class="CommitAvatar">
+                                    <div class="Avatar AvatarSmall">
+                                        {% if commit.Author and commit.Author.Username %}
+                                            {{ commit.Author.Username[0].upper() }}
+                                        {% else %}
+                                            ?
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="CommitInfo">
+                                    <div class="CommitMessage">
+                                        <a href="#">{{ commit.Message.split('\n')[0] }}</a>
+                                    </div>
+                                    <div class="CommitMeta">
+                                        <span class="CommitAuthor">
+                                            {% if commit.Author %}
+                                                {{ commit.Author.Username }}
+                                            {% else %}
+                                                Unknown
+                                            {% endif %}
+                                        </span>
+                                        <span class="CommitDate">committed {{ commit.CreatedAt.strftime('%b %d, %Y') }}</span>
+                                        <span class="CommitHash">
+                                            <a href="#">{{ commit.Hash[:7] }}</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="EmptyState">
+                        <div class="EmptyStateIcon">
+                            <i data-lucide="git-commit" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+                        </div>
+                        <h4>No Commits Yet</h4>
+                        <p>Get Started By Creating Your First Commit.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function cloneRepository() {
+    const cloneUrl = `git clone ${window.location.origin}/repo/{{ Repository.Name }}.git`;
+    navigator.clipboard.writeText(cloneUrl).then(() => {
+        alert('Clone URL Copied To Clipboard : ' + cloneUrl);
+    });
+}
+
+function switchBranch() {
+    const branchSelect = document.getElementById('branchSelect');
+    const selectedBranch = branchSelect.value;
+    const currentUrl = window.location.href;
+
+    // Check If We're Already On A Branch-Specific URL
+    if (currentUrl.includes('/tree/')) {
+        // Replace The Branch Part In The URL
+        const newUrl = currentUrl.replace(/\/tree\/[^\/]+/, '/tree/' + selectedBranch);
+        window.location.href = newUrl;
+    } else {
+        // Add Branch To URL
+        const baseUrl = currentUrl.replace(/\/repo\/[^\/]+/, '/repo/{{ Repository.Name }}/tree/' + selectedBranch);
+        window.location.href = baseUrl;
+    }
+}
+
+function switchToBranch(branchName) {
+    // Update The Select Dropdown
+    const branchSelect = document.getElementById('branchSelect');
+    branchSelect.value = branchName;
+
+    // Switch To The Branch
+    switchBranch();
+}
+
+function toggleRepoMenu() {
+    const menu = document.querySelector('.RepoMenuDropdown');
+    menu.classList.toggle('show');
+}
+
+// Close Menu When Clicking Outside
+document.addEventListener('click', function(e) {
+    const menu = document.querySelector('.RepoMenuDropdown');
+    const button = document.querySelector('.RepoMenuBtn');
+    if (menu && button && !menu.contains(e.target) && !button.contains(e.target)) {
+        menu.classList.remove('show');
+    }
+});
+</script>
+{% endblock %}
