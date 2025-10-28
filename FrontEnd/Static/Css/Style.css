@@ -14,6 +14,7 @@ body {
     flex-direction: column;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; 
+    overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
@@ -1847,7 +1848,6 @@ a:hover {
 .CheckboxContent strong {
     display: block;
     margin-bottom: 0.25rem;
-    color: #24292e;
 }
 
 .CheckboxContent p {
@@ -2013,7 +2013,7 @@ a:hover {
 .FilePreview h3 {
     margin: 0 0 1rem 0;
     font-size: 1rem;
-    color: #24292e;
+    color: #a1e0ba;
 }
 
 .PreviewStats {
@@ -2106,15 +2106,20 @@ a:hover {
 
 /* ===== UPLOAD FILE PAGE ===== */
 .UploadFilePage {
-    max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    animation: fadeIn 0.3s ease-out;
+    padding: 2rem 2rem;
 }
 
 .UploadContainer {
     display: flex;
     gap: 2rem;
     margin-top: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    align-items: flex-start;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .UploadSidebar {
@@ -2189,6 +2194,12 @@ a:hover {
 
 .UploadMain {
     flex: 1;
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    min-width: 0;
 }
 
 .UploadZone {
@@ -2243,6 +2254,9 @@ a:hover {
     border-radius: 0.5rem;
     padding: 1.5rem;
     margin-bottom: 2rem;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .FileItem {
@@ -2371,8 +2385,29 @@ a:hover {
     margin-bottom: 1rem;
 }
 
-.FileList {
+.FileList > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.FileList > div > span, .FileList > div > label, .FileList > div > input {
+    margin-left: 1.5rem;
     padding: 0;
+}
+
+.FileList > div {
+    font-size: 1.08rem;
+    color: #e6fff3;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    background: #21262d;
+    border-radius: 7px;
+    padding: 0.75rem 1rem 0.25rem 1rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    word-break: break-all;
 }
 
 .EmptyState {
