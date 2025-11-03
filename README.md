@@ -18,23 +18,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-- [✨ Features](#-features)
-- [🏗️ Architecture](#️-architecture)
-- [🚀 Quick Start](#-quick-start)
-- [📦 Installation](#-installation)
-- [⚙️ Configuration](#️-configuration)
-- [🔧 Usage](#-usage)
-- [📚 API Documentation](#-api-documentation)
-- [🎨 UI/UX](#-uiux)
-- [🛠️ Development](#️-development)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [🙏 Acknowledgments](#-acknowledgments)
-
----
-
 ## ✨ Features
 
 ### 🔐 Authentication & User Management
